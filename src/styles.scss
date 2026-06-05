@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+*{
+    margin: 0;
+    padding: 0;
+};
+
+body {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+};
+
+app-root {
+    width: 1440px;
+    background-color: #35273a;
+};
