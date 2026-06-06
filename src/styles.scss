@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'Mulish';
+    src: url('/font/Mulish/Mulish-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+}
+
+@font-face {
+    font-family: 'NerkoOne';
+    src: url('/font/Nerko_One/NerkoOne-Regular.ttf') format('truetype');
+}
+
 *{
     margin: 0;
     padding: 0;
