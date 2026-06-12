@@ -3,6 +3,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
+    padding: 0 100px 0 100px;
 };
 
 .textContainer {
@@ -21,7 +22,6 @@ h1 {
     font-size: 100px;
     line-height: 89px;
     letter-spacing: 0%;
-    margin-left: 100px;
 };
 
 p {
@@ -32,12 +32,14 @@ p {
     font-size: 24px;
     line-height: 100%;
     letter-spacing: 0%;
-    margin-left: 100px;
 };
 
 button {
     font-family: 'Mulish', sans-serif;
     background-color: #ffcfa1;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 18px;
     width: 138px;
     height: 48px;
     gap: 10px;
@@ -47,11 +49,9 @@ button {
     padding-right: 16px;
     padding-bottom: 12px;
     padding-left: 16px;
-    margin-left: 100px;
 };
 
 img {
-    margin-right: 100px;
     width: 426px;
     height: 420px;
 };
