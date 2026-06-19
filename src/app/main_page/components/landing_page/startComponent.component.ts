@@ -9,4 +9,6 @@ import {Component} from '@angular/core';
 
   
 
-export class StartComponent {}
+export class StartComponent {
+  currentImage = 'handy_image.png';
+}

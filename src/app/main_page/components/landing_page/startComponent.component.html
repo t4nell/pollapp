@@ -8,5 +8,5 @@
 </div>
 
 <div>
-    <img src="handy_image.png" alt="Handy Image" class="handyImage">
+    <img [src]="currentImage" (mouseenter)="currentImage = 'handy_image_2.png'" (mouseleave)="currentImage = 'handy_image.png'" alt="Handy Image" class="handyImage">
 </div>
