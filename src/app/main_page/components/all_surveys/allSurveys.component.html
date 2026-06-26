@@ -5,88 +5,23 @@
     </div>
     <select class="sortByCategory">
         <option value="">Sort by category</option>
-        <option value="politics">Politics</option>
-        <option value="sports">Sports</option>
-        <option value="technology">Technology</option>
+        <option value="team-activities">Team Activities</option>
+        <option value="health-wellness">Health & Wellness</option>
+        <option value="gaming-entertainment">Gaming & Entertainment</option>
+        <option value="education-learning">Education & Learning</option>
+        <option value="lifestyle-preferences">Lifestyle & Preferences</option>
+        <option value="technology-innovation">Technology & Innovation</option>
     </select>
 </div>
 
 <div class="surveyCardsContainer">
-    <div class="surveyCard">
+
+    <div class="surveyCard" *ngFor="let survey of surveys">
         <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
+            <p class="surveyCategory">{{ survey.category }}</p>
+            <p class="surveyName">{{ survey.name }}</p>
         </div>
-        <p class="surveyEndDate">Ends in 1 Day</p>
+        <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
     </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 2 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 2 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 3 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 4 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 5 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 6 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 7 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 8 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 9 days</p>
-    </div>
-    <div class="surveyCard">
-        <div class="surveyInfo">
-            <p class="surveyCategory">Survey Category:</p>
-            <p class="surveyDescription">Survey Description:</p>
-        </div>
-        <p class="surveyEndDate">Ends in 10 days</p>
-    </div>
+
 </div>
