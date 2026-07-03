@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Supabase } from '../../../supabase';
+import { Survey } from '../../../shared/interfaces/survey.interface';
+import { SurveyService } from '../../../shared/services/survey.service';
 
 @Component({
   selector: 'all-surveys',
@@ -12,20 +13,26 @@ import { Supabase } from '../../../supabase';
 
 
 export class AllSurveys implements OnInit {
-    surveys: any[] = [];
+    surveys: Survey[] = [];
+    isSelectOpen = false;
+    activeFilter: 'active' | 'past' | null = null;
 
-  constructor(private supabaseService: Supabase) {}
+    toggleFilter(filter: 'active' | 'past') {
+        this.activeFilter = this.activeFilter === filter ? null : filter;
+    }
+
+    @HostListener('document:keydown.escape')
+    onEscape() {
+        this.isSelectOpen = false;
+    }
+
+  constructor(private surveyService: SurveyService) {}
 
   async ngOnInit() {
-    const { data, error } = await this.supabaseService.supabase
-      .from('survey')
-      .select('*');
-
-    if (error) {
+    try {
+      this.surveys = await this.surveyService.getAllSurveys();
+    } catch (error) {
       console.error(error);
-    } else {
-      this.surveys = data;
-      console.log(data);
     }
   }
 
@@ -40,5 +47,10 @@ export class AllSurveys implements OnInit {
       return `${hours} hours`;
     }
     return `${Math.ceil(diff / (1000 * 60 * 60 * 24))} days`;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    console.log('Window resized');
   }
 }

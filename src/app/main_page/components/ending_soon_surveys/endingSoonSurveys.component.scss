@@ -5,99 +5,101 @@
     align-items: center;
     gap: 56px;
     padding: 0 100px 0 100px;
-    margin-bottom: 50px
-};
+    margin-bottom: 50px;
 
-h2 {
-    font-family: 'NerkoOne', sans-serif;
-    color: #FFB770;
-    font-weight: 400;
-    font-style: Regular;
-    font-size: 72px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
-
+    h2 {
+        font-family: 'NerkoOne', sans-serif;
+        color: #FFB770;
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 72px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+    };
 };
 
 .yourSurveysContainer {
     display: flex;
     flex-direction: column;
     gap: 32px;
-};
 
+    h3 {
+        font-family: 'Mulish', sans-serif;
+        color: #FFFFFF;
+        font-weight: 500;
+        font-style: Medium;
+        font-size: 32px;
+        line-height: 100%;
+        letter-spacing: 0%;
+    };
 
-h3 {
-    font-family: 'Mulish', sans-serif;
-    color: #FFFFFF;
-    font-weight: 500;
-    font-style: Medium;
-    font-size: 32px;
-    line-height: 100%;
-    letter-spacing: 0%;
-};
+    .endingSoonSurveys {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
 
-.endingSoonSurveys {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    width: 100%;
-};
+        .surveyCard {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #ffffff;
+            width: calc(321px - 64px);
+            height: calc(310px - 80px);
+            opacity: 1;
+            padding-top: 40px;
+            padding-right: 32px;
+            padding-bottom: 40px;
+            padding-left: 32px;
+            border-top-right-radius: 80px;
+            cursor: pointer;
 
-.surveyCard {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #ffffff;
-    width: calc(321px - 64px);
-    height: calc(310px - 80px);
-    opacity: 1;
-    padding-top: 40px;
-    padding-right: 32px;
-    padding-bottom: 40px;
-    padding-left: 32px;
-    border-top-right-radius: 80px;
-    cursor: pointer;
-};
+            &:hover {
+                background: #F4E9FB;
+            };
 
-.surveyCategory{
-    color:#35273A;
-    font-family: 'Mulish', sans-serif;
-    font-weight: 600;
-    font-style: SemiBold;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    padding-bottom: 8px;
-};
+            .surveyCategory {
+                color: #35273A;
+                font-family: 'Mulish', sans-serif;
+                font-weight: 600;
+                font-style: SemiBold;
+                font-size: 14px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                padding-bottom: 8px;
+            };
 
-.surveyDescription{
-    color:#35273A;
-    font-family: 'Mulish', sans-serif;
-    font-weight: 700;
-    font-style: Bold;
-    font-size: 26px;
-    line-height: 100%;
-    letter-spacing: 0%;
-};
+            .surveyName {
+                color: #35273A;
+                font-family: 'Mulish', sans-serif;
+                font-weight: 700;
+                font-style: Bold;
+                font-size: 26px;
+                line-height: 100%;
+                letter-spacing: 0%;
+            };
 
-.surveyEndDate{
-    background: #FFCFA1;
-    width: 89px;
-    gap: 10px;
-    opacity: 1;
-    border-top-right-radius: 14px;
-    padding-top: 3px;
-    padding-right: 6px;
-    padding-bottom: 3px;
-    padding-left: 6px;
-    font-family: 'Mulish', sans-serif;
-    font-weight: 500;
-    font-style: Medium;
-    font-size: 12px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
+            .surveyEndDate {
+                background: #FFCFA1;
+                width: 91px;
+                gap: 10px;
+                opacity: 1;
+                border-top-right-radius: 14px;
+                padding-top: 3px;
+                padding-right: 6px;
+                padding-bottom: 3px;
+                padding-left: 6px;
+                font-family: 'Mulish', sans-serif;
+                font-weight: 500;
+                font-style: Medium;
+                font-size: 12px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                text-align: center;
+            };
+        };
+    };
 };

@@ -13,43 +13,69 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 50px;
-};
 
-h1 {
-    font-family: 'NerkoOne', sans-serif;
-    color: #FFB770;
-    font-weight: 400;
-    font-style: Regular;
-    font-size: 100px;
-    line-height: 89px;
-    letter-spacing: 0%;
-};
+    h1 {
+        font-family: 'NerkoOne', sans-serif;
+        color: #FFB770;
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 100px;
+        line-height: 89px;
+        letter-spacing: 0%;
+    };
 
-p {
-    font-family: 'Mulish', sans-serif;
-    color: #FFFFFF;
-    font-weight: 600;
-    font-style: SemiBold;
-    font-size: 24px;
-    line-height: 100%;
-    letter-spacing: 0%;
-};
+    p {
+        font-family: 'Mulish', sans-serif;
+        color: #FFFFFF;
+        font-weight: 600;
+        font-style: SemiBold;
+        font-size: 24px;
+        line-height: 100%;
+        letter-spacing: 0%;
+    };
 
-button {
-    font-family: 'Mulish', sans-serif;
-    background-color: #ffcfa1;
-    font-weight: 700;
-    font-style: Bold;
-    font-size: 18px;
-    width: 138px;
-    height: 48px;
-    gap: 10px;
-    opacity: 1;
-    border-radius: 10px;
-    padding-top: 12px;
-    padding-right: 16px;
-    padding-bottom: 12px;
-    padding-left: 16px;
+    button {
+        font-family: 'Mulish', sans-serif;
+        background-color: #ffcfa1;
+        font-weight: 700;
+        font-style: Bold;
+        font-size: 18px;
+        width: 138px;
+        height: 48px;
+        opacity: 1;
+        border-radius: 10px;
+        border: none;
+        padding-top: 12px;
+        padding-right: 16px;
+        padding-bottom: 12px;
+        padding-left: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0;
+        overflow: hidden;
+        transition: width 0.3s ease, background 0.3s ease, gap 0.3s ease;
+
+        .btnIcon {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            transition: width 0.3s ease, opacity 0.3s ease;
+        };
+
+        &:hover {
+            background: #FFB770;
+            width: 172px;
+            gap: 16px;
+
+            .btnIcon {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            };
+        };
+    };
 };
 
 img {

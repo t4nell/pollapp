@@ -5,28 +5,12 @@
 
     <div class="endingSoonSurveys">
 
-        <div class="surveyCard">
+        <div class="surveyCard" *ngFor="let survey of surveys">
             <div>
-                <p class="surveyCategory">Survey Category:</p>
-                <p class="surveyDescription">Survey Description:</p>
+                <p class="surveyCategory">{{ survey.category }}</p>
+                <p class="surveyName">{{ survey.name }}</p>
             </div>
-            <p class="surveyEndDate">Ends in: 3 days</p>
-        </div>  
-
-        <div class="surveyCard">
-            <div>
-                <p class="surveyCategory">Survey Category:</p>
-                <p class="surveyDescription">Survey Description:</p>
-            </div>
-            <p class="surveyEndDate">Ends in 2 days</p>
-        </div>
-        
-        <div class="surveyCard">
-            <div>
-                <p class="surveyCategory">Survey Category:</p>
-                <p class="surveyDescription">Survey Description:</p>
-            </div>
-            <p class="surveyEndDate">Ends in 1 Day</p>
+            <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
         </div>
 
     </div>    

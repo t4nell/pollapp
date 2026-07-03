@@ -1,9 +1,18 @@
 <div class="filterBar">
     <div class="filterButtonsContainer">
-        <button class="activeButton">Active surveys</button>
-        <button class="pastButton">Past surveys</button>
+        <button class="activeButton"
+            [class.is-active]="activeFilter === 'active'"
+            (click)="toggleFilter('active')">Active surveys</button>
+        <button class="pastButton"
+            [class.is-active]="activeFilter === 'past'"
+            (click)="toggleFilter('past')">Past surveys</button>
     </div>
-    <select class="sortByCategory">
+    <select class="sortByCategory"
+        [class.is-open]="isSelectOpen"
+        (focus)="isSelectOpen = true"
+        (blur)="isSelectOpen = false"
+        (change)="isSelectOpen = false"
+        (keydown.escape)="isSelectOpen = false">
         <option class="filteroption" value="">Sort by category</option>
         <option class="filteroption" value="team-activities">Team Activities</option>
         <option class="filteroption" value="health-wellness">Health & Wellness</option>
