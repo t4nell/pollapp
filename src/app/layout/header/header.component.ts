@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +10,12 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   constructor(public router: Router) {}
 
+  @HostBinding('class.survey-detail-header')
+  get isSurveyDetail(): boolean {
+    return this.router.url.startsWith('/survey/');
+  }
+
   get logoSrc(): string {
-    return this.router.url.startsWith('/survey/') ? 'logo_dark.png' : 'logo_orange.svg';
+    return this.isSurveyDetail ? 'logo_dark.png' : 'logo_orange.svg';
   }
 }
