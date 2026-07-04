@@ -17,6 +17,17 @@ export class SurveyService {
     return data;
   }
 
+  async getSurveyById(id: number): Promise<Survey> {
+    const { data, error } = await this.supabase.supabase
+      .from('surveys')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
   async getEndingSoonSurveys(): Promise<Survey[]> {
     const today = new Date().toISOString().split('T')[0];
 

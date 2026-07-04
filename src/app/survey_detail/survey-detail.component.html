@@ -1,0 +1,42 @@
+<div class="detailPage" *ngIf="survey">
+
+  <div class="surveyForm">
+
+    <div class="surveyMeta">
+      <span class="statusBadge">{{ survey.status }}</span>
+      <div class="metaRow">
+        <p class="endDate">Ends on {{ survey.end_data }}</p>
+        <p class="category">Category: {{ survey.category }}</p>
+      </div>
+    </div>
+
+    <h1>{{ survey.name }}</h1>
+    <p class="description">{{ survey.discription }}</p>
+
+    <div class="questionsGrid">
+      <div class="questionCard" *ngFor="let question of questions">
+        <p class="questionText">{{ question.order }}. {{ question.text }}</p>
+        <div class="optionsList">
+          <label
+            class="option"
+            *ngFor="let option of question.options; let i = index"
+            [class.selected]="isSelected(question.id, i)"
+            (click)="selectOption(question.id, i)">
+            <input type="checkbox" [checked]="isSelected(question.id, i)" (click)="$event.stopPropagation()">
+            {{ option }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <button class="completeButton">Complete survey</button>
+
+  </div>
+
+  <div class="resultsPanel">
+    <h2>Survey results <span class="live">LIVE</span></h2>
+    <p class="noResults">Results will be shown here after participants complete the survey.</p>
+    <p class="noAnswers">There are no answers yet.</p>
+  </div>
+
+</div>

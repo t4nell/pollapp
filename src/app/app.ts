@@ -1,18 +1,14 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./layout/header/header.component";
-import { StartComponent } from "./main_page/components/landing_page/startComponent.component";
-import { EndingSoonSurveys } from "./main_page/components/ending_soon_surveys/endingSoonSurveys.component";
-import { AllSurveys } from "./main_page/components/all_surveys/allSurveys.component";
-import { Supabase } from "./supabase";
+import { HeaderComponent } from './layout/header/header.component';
+import { Supabase } from './supabase';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, StartComponent, EndingSoonSurveys, AllSurveys],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-
 export class App {
   protected readonly title = signal('pollapp');
   dbServise = inject(Supabase);

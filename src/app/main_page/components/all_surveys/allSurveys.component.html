@@ -25,7 +25,7 @@
 
 <div class="surveyCardsContainer">
 
-    <div class="surveyCard" *ngFor="let survey of surveys">
+    <div class="surveyCard" *ngFor="let survey of surveys" (click)="navigateToSurvey(survey.id)">
         <div class="surveyInfo">
             <p class="surveyCategory">{{ survey.category }}</p>
             <p class="surveyName">{{ survey.name }}</p>
