@@ -17,6 +17,16 @@ export class AllSurveys implements OnInit {
     surveys: Survey[] = [];
     isSelectOpen = false;
     activeFilter: 'active' | 'past' | null = null;
+    selectedCategory = '';
+
+    get filteredSurveys(): Survey[] {
+        if (!this.selectedCategory) {
+            return this.surveys;
+        }
+        return this.surveys.filter(
+            (survey) => survey.category === this.selectedCategory
+        );
+    }
 
     toggleFilter(filter: 'active' | 'past') {
         this.activeFilter = this.activeFilter === filter ? null : filter;

@@ -11,21 +11,21 @@
         [class.is-open]="isSelectOpen"
         (focus)="isSelectOpen = true"
         (blur)="isSelectOpen = false"
-        (change)="isSelectOpen = false"
+        (change)="selectedCategory = $any($event.target).value; isSelectOpen = false"
         (keydown.escape)="isSelectOpen = false">
-        <option class="filteroption" value="">Sort by category</option>
-        <option class="filteroption" value="team-activities">Team Activities</option>
-        <option class="filteroption" value="health-wellness">Health & Wellness</option>
-        <option class="filteroption" value="gaming-entertainment">Gaming & Entertainment</option>
-        <option class="filteroption" value="education-learning">Education & Learning</option>
-        <option class="filteroption" value="lifestyle-preferences">Lifestyle & Preferences</option>
-        <option class="filteroption" value="technology-innovation">Technology & Innovation</option>
+        <option class="filteroption" value="">All categories</option>
+        <option class="filteroption" value="Team activitie">Team activitie</option>
+        <option class="filteroption" value="Health & Wellness">Health & Wellness</option>
+        <option class="filteroption" value="Gaming & Entertainment">Gaming & Entertainment</option>
+        <option class="filteroption" value="Education & Learning">Education & Learning</option>
+        <option class="filteroption" value="Lifestyle & Preferences">Lifestyle & Preferences</option>
+        <option class="filteroption" value="Technology & Innovation">Technology & Innovation</option>
     </select>
 </div>
 
 <div class="surveyCardsContainer">
 
-    <div class="surveyCard" *ngFor="let survey of surveys" (click)="navigateToSurvey(survey.id)">
+    <div class="surveyCard" *ngFor="let survey of filteredSurveys" (click)="navigateToSurvey(survey.id)">
         <div class="surveyInfo">
             <p class="surveyCategory">{{ survey.category }}</p>
             <p class="surveyName">{{ survey.name }}</p>
