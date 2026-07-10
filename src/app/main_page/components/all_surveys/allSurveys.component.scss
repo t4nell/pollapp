@@ -213,3 +213,25 @@
         };
     };
 };
+
+.emptyState {
+    width: 80%;
+    background: #D9D9D914;
+    border-top-right-radius: 40px;
+    padding: 24px;
+    text-align: center;
+}
+
+.emptyTitle {
+    font-family: 'Mulish', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.emptyText {
+    font-family: 'Mulish', sans-serif;
+    font-size: 16px;
+    color: #FFCFA1;
+}

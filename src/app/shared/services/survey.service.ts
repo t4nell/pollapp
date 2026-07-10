@@ -52,4 +52,16 @@ export class SurveyService {
     if (error) throw error;
     return data;
   }
+
+  async saveAnswers(
+    answersToSave: Array<{ survey_id: number; question_id: number; option_index: number }>
+  ): Promise<void> {
+    if (answersToSave.length === 0) return;
+
+    const { error } = await this.supabase.supabase
+      .from('answer')
+      .insert(answersToSave);
+
+    if (error) throw error;
+  }
 }

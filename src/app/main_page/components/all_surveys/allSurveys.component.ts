@@ -20,12 +20,26 @@ export class AllSurveys implements OnInit {
     selectedCategory = '';
 
     get filteredSurveys(): Survey[] {
-        if (!this.selectedCategory) {
-            return this.surveys;
-        }
-        return this.surveys.filter(
-            (survey) => survey.category === this.selectedCategory
-        );
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return this.surveys.filter((survey) => {
+            const matchesCategory =
+                !this.selectedCategory || survey.category === this.selectedCategory;
+
+            const endDate = new Date(survey.end_data);
+            endDate.setHours(23, 59, 59, 999);
+
+            const isActive = endDate.getTime() >= today.getTime();
+            const isPast = endDate.getTime() < today.getTime();
+
+            const matchesStatus =
+                !this.activeFilter ||
+                (this.activeFilter === 'active' && isActive) ||
+                (this.activeFilter === 'past' && isPast);
+
+            return matchesCategory && matchesStatus;
+        });
     }
 
     toggleFilter(filter: 'active' | 'past') {

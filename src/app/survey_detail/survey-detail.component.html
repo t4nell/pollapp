@@ -16,20 +16,21 @@
     <div class="questionsGrid">
       <div class="questionCard" *ngFor="let question of questions">
         <p class="questionText">{{ question.order }}. {{ question.text }}</p>
+        <p class="multiHint" *ngIf="question.multiple">More than one answers are possible.</p>
         <div class="optionsList">
-          <label
-            class="option"
-            *ngFor="let option of question.options; let i = index"
-            [class.selected]="isSelected(question.id, i)"
-            (click)="selectOption(question.id, i)">
-            <input type="checkbox" [checked]="isSelected(question.id, i)" (click)="$event.stopPropagation()">
-            {{ option }}
+          <label class="option" *ngFor="let option of question.options; let i = index" [class.selected]="isSelected(question.id, i)">
+            <input type="checkbox" [checked]="isSelected(question.id, i)" (change)="selectOption(question.id, i)">
+            <span class="optionText">{{ option }}</span>
           </label>
         </div>
       </div>
     </div>
 
-    <button class="completeButton">Complete survey</button>
+    <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Submitting...' : 'Complete survey' }}
+    </button>
+
+    <div class="submitOverlay" *ngIf="submitMessage"> {{ submitMessage }} </div>
 
   </div>
 

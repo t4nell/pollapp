@@ -23,7 +23,7 @@
     </select>
 </div>
 
-<div class="surveyCardsContainer">
+<div class="surveyCardsContainer" *ngIf="filteredSurveys.length > 0; else noResults">
 
     <div class="surveyCard" *ngFor="let survey of filteredSurveys" (click)="navigateToSurvey(survey.id)">
         <div class="surveyInfo">
@@ -34,3 +34,10 @@
     </div>
 
 </div>
+
+<ng-template #noResults>
+    <div class="emptyState">
+        <p class="emptyTitle">No surveys found</p>
+        <p class="emptyText">Try another category or switch the active/past filter.</p>
+    </div>
+</ng-template>

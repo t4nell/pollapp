@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Survey } from '../../../shared/interfaces/survey.interface';
 import { SurveyService } from '../../../shared/services/survey.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ending-soon-surveys',
@@ -13,7 +14,7 @@ import { SurveyService } from '../../../shared/services/survey.service';
 export class EndingSoonSurveys implements OnInit {
   surveys: Survey[] = [];
 
-  constructor(private surveyService: SurveyService) {}
+  constructor(private surveyService: SurveyService, private router: Router) {}
 
   async ngOnInit() {
     try {
@@ -34,5 +35,9 @@ export class EndingSoonSurveys implements OnInit {
       return `${hours} hours`;
     }
     return `${Math.ceil(diff / (1000 * 60 * 60 * 24))} days`;
+  }
+
+  navigateToSurvey(id: number) {
+    this.router.navigate(['/survey', id]);
   }
 }
