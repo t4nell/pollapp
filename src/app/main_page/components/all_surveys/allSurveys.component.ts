@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Survey } from '../../../shared/interfaces/survey.interface';
 import { SurveyService } from '../../../shared/services/survey.service';
@@ -55,11 +55,12 @@ export class AllSurveys implements OnInit {
         this.router.navigate(['/survey', id]);
     }
 
-  constructor(private surveyService: SurveyService, private router: Router) {}
+  constructor( private surveyService: SurveyService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   async ngOnInit() {
     try {
       this.surveys = await this.surveyService.getAllSurveys();
+      this.cdr.detectChanges();
     } catch (error) {
       console.error(error);
     }
@@ -76,10 +77,5 @@ export class AllSurveys implements OnInit {
       return `${hours} hours`;
     }
     return `${Math.ceil(diff / (1000 * 60 * 60 * 24))} days`;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    console.log('Window resized');
   }
 }

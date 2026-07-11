@@ -64,4 +64,16 @@ export class SurveyService {
 
     if (error) throw error;
   }
-}
+
+  async getAnswersBySurveyId(
+    surveyId: number ): Promise<Array<{ question_id: number; option_index: number }>> {
+
+    const { data, error } = await this.supabase.supabase
+      .from('answer')
+      .select('question_id, option_index')
+      .eq('survey_id', surveyId);
+
+    if (error) throw error;
+    return data ?? [];
+  }
+};

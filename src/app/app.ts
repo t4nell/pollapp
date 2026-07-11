@@ -11,5 +11,5 @@ import { Supabase } from './supabase';
 })
 export class App {
   protected readonly title = signal('pollapp');
-  dbServise = inject(Supabase);
+  dbService = inject(Supabase);
 }

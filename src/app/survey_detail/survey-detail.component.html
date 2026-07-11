@@ -34,10 +34,28 @@
 
   </div>
 
-  <div class="resultsPanel">
+  <div class="resultsPanel" [class.has-results]="hasAnyResults()">
     <h2>Survey results <span class="live">LIVE</span></h2>
-    <p class="noResults">Results will be shown here after participants complete the survey.</p>
-    <p class="noAnswers">There are no answers yet.</p>
+    <ng-container *ngIf="hasAnyResults(); else noResultsState">
+      <div class="resultQuestion" *ngFor="let question of questions">
+        <p class="resultQuestionTitle">{{ question.order }}. {{ question.text }}</p>
+
+        <div class="resultRow" *ngFor="let option of question.options; let i = index">
+          <span class="resultLabel">{{ getOptionLetter(i) }}</span>
+
+          <div class="resultTrack">
+            <div class="resultBar" [style.width.%]="getResultPercent(question.id, i)"></div>
+          </div>
+
+          <span class="resultPercent">{{ getResultPercent(question.id, i) }}%</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noResultsState>
+      <p class="noResults">Results will be shown here after participants complete the survey.</p>
+      <p class="noAnswers">There are no answers yet.</p>
+    </ng-template>
   </div>
 
 </div>

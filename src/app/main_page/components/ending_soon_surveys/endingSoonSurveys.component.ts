@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Survey } from '../../../shared/interfaces/survey.interface';
 import { SurveyService } from '../../../shared/services/survey.service';
@@ -14,11 +14,12 @@ import { Router } from '@angular/router';
 export class EndingSoonSurveys implements OnInit {
   surveys: Survey[] = [];
 
-  constructor(private surveyService: SurveyService, private router: Router) {}
+  constructor(private surveyService: SurveyService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   async ngOnInit() {
     try {
       this.surveys = await this.surveyService.getEndingSoonSurveys();
+      this.cdr.detectChanges();
     } catch (error) {
       console.error(error);
     }
