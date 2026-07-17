@@ -1,0 +1,146 @@
+<div class="createSurveyPage">
+  <div class="createSurveyCard">
+
+    <div class="topBar">
+      <div class="titleArea">
+        <span class="draftBadge">Draft</span>
+        <h1>Create new survey</h1>
+      </div>
+
+      <button type="button" class="cancelButton" (click)="onCancel()">
+        <span>Cancel</span>
+        <span class="xIcon">x</span>
+      </button>
+    </div>
+
+    <div class="innerPanel">
+
+      <div class="metaGrid">
+        <div class="leftMeta">
+          <div class="field">
+            <label for="surveyName"><span class="requiredStar">*</span>Survey name</label>
+            <div class="inputWithIcon">
+              <input id="surveyName" type="text" [(ngModel)]="surveyName" />
+              <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
+                <img src="/property1_default.png" alt="" class="trashIcon" />
+              </button>
+            </div>
+          </div>
+
+          <div class="rowFields">
+            <div class="field">
+              <label for="endDate">Set end date <span>(optional)</span></label>
+              <div class="inputWithIcon">
+                <input id="endDate" type="date" [(ngModel)]="endDate" />
+                <button type="button" class="iconButton" (click)="clearEndDate()" aria-label="Clear end date">
+                  <img src="/property1_default.png" alt="" class="trashIcon" />
+                </button>
+              </div>
+            </div>
+
+            <div class="field">
+              <select
+                id="category"
+                [class.is-open]="isCategoryOpen"
+                (mousedown)="isCategoryOpen = true"
+                (focus)="isCategoryOpen = true"
+                (change)="isCategoryOpen = false"
+                (blur)="isCategoryOpen = false"
+                (keydown.escape)="isCategoryOpen = false"
+              >
+                <option value="">Select category</option>
+                <option value="Team activitie">Team activitie</option>
+                <option value="Health & Wellness">Health & Wellness</option>
+                <option value="Gaming & Entertainment">Gaming & Entertainment</option>
+                <option value="Education & Learning">Education & Learning</option>
+                <option value="Lifestyle & Preferences">Lifestyle & Preferences</option>
+                <option value="Technology & Innovation">Technology & Innovation</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="rightMeta">
+          <div class="field">
+            <label for="description">Discribing text <span>(optional)</span></label>
+            <div class="inputWithIcon">
+              <textarea id="description" rows="4" [(ngModel)]="description"></textarea>
+              <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
+                <img src="/property1_default.png" alt="" class="trashIcon" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="questionsGrid">
+        <article class="questionCard" *ngFor="let question of questions; let qIndex = index; trackBy: trackByQuestion">
+          <div class="questionHeader">
+            <p><span class="requiredStar">*</span>{{ qIndex + 1 }}. Question</p>
+            <button
+              type="button"
+              class="iconButton"
+              aria-label="Delete question"
+              (click)="removeQuestion(question.id)"
+            >
+              <img src="/property1_default.png" alt="" class="trashIcon" />
+            </button>
+          </div>
+
+          <input type="text" [(ngModel)]="question.text" placeholder="Which date would work best for you?" />
+
+          <div class="answersHeader">
+            <p><span class="requiredStar">*</span>Answers</p>
+            <label class="multipleAnswersToggle">
+              <input type="checkbox" [(ngModel)]="question.multiple" />
+              <span>Allow multiple answers.</span>
+            </label>
+          </div>
+
+          <div
+            class="answerRow"
+            *ngFor="let answer of question.answers; let aIndex = index; trackBy: trackByAnswerIndex"
+          >
+            <span class="answerLetter">{{ getOptionLetter(aIndex) }}.</span>
+            <input type="text" [(ngModel)]="question.answers[aIndex]" />
+            <button
+              type="button"
+              class="iconButton"
+              [attr.aria-label]="'Delete answer ' + getOptionLetter(aIndex)"
+              (click)="removeAnswer(qIndex, aIndex)"
+            >
+              <img src="/property1_default.png" alt="" class="trashIcon" />
+            </button>
+          </div>
+
+          <button type="button" class="linkButton" (click)="addAnswer(qIndex)" [disabled]="!canAddAnswer(qIndex)">
+            Add answer
+            <img src="/add_circle_light.png" alt="" class="addAnswerIcon" />
+          </button>
+
+          <p class="answerLimitHint" *ngIf="question.hasClickedAddAnswer">
+            You can add up to 6 answers.
+          </p>
+        </article>
+
+        <button
+          type="button"
+          class="addQuestionButton addQuestionSlot"
+          (click)="addQuestion()"
+          [disabled]="!canAddQuestion"
+        >
+          Add next question
+          <img src="/add_circle_light.png" alt="" class="addQuestionIcon" />
+        </button>
+      </div>
+
+      <p class="questionLimitHint" *ngIf="!canAddQuestion">
+        Maximum 6 questions reached.
+      </p>
+    </div>
+
+    <div class="bottomBar">
+      <button type="button" class="publishButton">Publish</button>
+    </div>
+  </div>
+</div>

@@ -1,2 +1,4 @@
-<main-header></main-header>
+@if (!router.url.startsWith('/new-survey')) {
+  <main-header></main-header>
+}
 <router-outlet />
