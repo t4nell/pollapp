@@ -38,9 +38,12 @@
               </div>
             </div>
 
-            <div class="field">
+            <div class="field categoryField">
+              <span class="requiredStar categoryRequiredStar">*</span>
+
               <select
                 id="category"
+                [(ngModel)]="category"
                 [class.is-open]="isCategoryOpen"
                 (mousedown)="isCategoryOpen = true"
                 (focus)="isCategoryOpen = true"
@@ -140,7 +143,12 @@
     </div>
 
     <div class="bottomBar">
-      <button type="button" class="publishButton">Publish</button>
+      <p class="publishError" *ngIf="publishError">{{ publishError }}</p>
+      <button type="button" class="publishButton" (click)="publishSurvey()" [disabled]="isPublishing" [class.is-disabled]="isPublishing">Publish</button>
     </div>
+
   </div>
 </div>
+
+<div class="publishToast" *ngIf="publishSuccessMessage()">{{ publishSuccessMessage() }}</div>
+

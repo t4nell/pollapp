@@ -25,7 +25,11 @@
 
 <div class="surveyCardsContainer" *ngIf="filteredSurveys.length > 0; else noResults">
 
-    <div class="surveyCard" *ngFor="let survey of filteredSurveys" (click)="navigateToSurvey(survey.id)">
+    <div
+        class="surveyCard"
+        *ngFor="let survey of filteredSurveys"
+        [class.is-expired]="isSurveyExpired(survey)"
+        (click)="!isSurveyExpired(survey) && navigateToSurvey(survey.id)">
         <div class="surveyInfo">
             <p class="surveyCategory">{{ survey.category }}</p>
             <p class="surveyName">{{ survey.name }}</p>

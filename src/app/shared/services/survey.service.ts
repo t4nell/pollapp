@@ -76,4 +76,47 @@ export class SurveyService {
     if (error) throw error;
     return data ?? [];
   }
-};
+
+  async createSurvey(survey: {
+    name: string;
+    category: string;
+    discription: string;
+    end_data: string | null;
+  }): Promise<Survey> {
+    const { data, error } = await this.supabase.supabase
+      .from('surveys')
+      .insert(survey)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async createQuestions(questions: Array<{
+    survey_id: number;
+    text: string;
+    multiple: boolean;
+    order: number;
+    options: string[];
+  }>): Promise<Question[]> {
+    if (questions.length === 0) return [];
+
+    const { data, error } = await this.supabase.supabase
+      .from('question')
+      .insert(questions)
+      .select('*');
+
+    if (error) throw error;
+    return data ?? [];
+  }
+
+  async deleteSurveyById(id: number): Promise<void> {
+    const { error } = await this.supabase.supabase
+      .from('surveys')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+}

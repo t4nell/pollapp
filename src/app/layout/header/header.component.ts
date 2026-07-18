@@ -18,4 +18,12 @@ export class HeaderComponent {
   get logoSrc(): string {
     return this.isSurveyDetail ? 'logo_dark.png' : 'logo_orange.svg';
   }
+
+  goToNewSurvey() {
+    this.router.navigate(['/new-survey']);
+  }
+
+  goToHome() {
+    this.router.navigate(['/']);
+  }
 }
