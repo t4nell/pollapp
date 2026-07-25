@@ -2,6 +2,21 @@ import { Injectable } from '@angular/core';
 import { Supabase } from '../../supabase';
 import { Survey, Question } from '../interfaces/survey.interface';
 
+type AnswerInsert = { survey_id: number; question_id: number; option_index: number };
+type SurveyCreatePayload = {
+  name: string;
+  category: string;
+  discription: string;
+  end_data: string | null;
+};
+type QuestionCreatePayload = {
+  survey_id: number;
+  text: string;
+  multiple: boolean;
+  order: number;
+  options: string[];
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,7 +69,7 @@ export class SurveyService {
   }
 
   async saveAnswers(
-    answersToSave: Array<{ survey_id: number; question_id: number; option_index: number }>
+    answersToSave: AnswerInsert[]
   ): Promise<void> {
     if (answersToSave.length === 0) return;
 
@@ -65,8 +80,7 @@ export class SurveyService {
     if (error) throw error;
   }
 
-  async getAnswersBySurveyId(
-    surveyId: number ): Promise<Array<{ question_id: number; option_index: number }>> {
+  async getAnswersBySurveyId(surveyId: number): Promise<Array<{ question_id: number; option_index: number }>> {
 
     const { data, error } = await this.supabase.supabase
       .from('answer')
@@ -77,12 +91,7 @@ export class SurveyService {
     return data ?? [];
   }
 
-  async createSurvey(survey: {
-    name: string;
-    category: string;
-    discription: string;
-    end_data: string | null;
-  }): Promise<Survey> {
+  async createSurvey(survey: SurveyCreatePayload): Promise<Survey> {
     const { data, error } = await this.supabase.supabase
       .from('surveys')
       .insert(survey)
@@ -93,13 +102,7 @@ export class SurveyService {
     return data;
   }
 
-  async createQuestions(questions: Array<{
-    survey_id: number;
-    text: string;
-    multiple: boolean;
-    order: number;
-    options: string[];
-  }>): Promise<Question[]> {
+  async createQuestions(questions: QuestionCreatePayload[]): Promise<Question[]> {
     if (questions.length === 0) return [];
 
     const { data, error } = await this.supabase.supabase

@@ -26,21 +26,52 @@
       flex-direction: column;
       gap: 8px;
 
+      .statusBar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      
+        
+      }
+
       .statusBadge {
-        background: #FFB770;
-        padding: 2px 12px;
-        border-radius: 20px;
-        font-family: 'Mulish', sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        width: fit-content;
-        text-transform: capitalize;
-      };
+          background: #FFB770;
+          padding: 2px 12px;
+          border-radius: 20px;
+          font-family: 'Mulish', sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          width: fit-content;
+          text-transform: capitalize;
+        }
+
+        .backButton {
+          width: 30px;
+          height: 30px;
+          background: #FFCFA1;
+          border: none;
+          border-radius: 10px;
+          color: black;
+          font-family: 'Mulish', sans-serif;
+          font-size: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0;
+          margin-right: 16px;
+          display: none;
+        };
+
+
+      
 
       .metaRow {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+
+        .endDate {
+          padding-right: 16px;
+        }
 
         .endDate, .category {
           font-family: 'Mulish', sans-serif;
@@ -160,6 +191,19 @@
       font-weight: 700;
       font-size: 16px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      .labelMobile,
+      .checkIcon {
+        display: none;
+      }
+
+      .checkIcon {
+        width: 18px;
+        height: 18px;
+      }
 
       &:hover {
         background: #ffcfa1;
@@ -298,4 +342,51 @@
     };
   };  
 };
+
+@media (max-width: 920px) {
+  .detailPage {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .detailPage .surveyForm {
+    max-width: 100%;
+  }
+
+  .detailPage .resultsPanel {
+    width: 100%;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .detailPage .surveyForm .surveyMeta .backButton {
+    display: block;
+  }
+
+  .detailPage .surveyForm {
+    padding: 16px;
+  }
+
+  .detailPage .surveyForm .questionsGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 530px) {
+  :host {
+    padding: 0 16px 0 16px;
+  }
+
+  .detailPage .surveyForm .completeButton .labelDesktop {
+    display: none;
+  }
+
+  .detailPage .surveyForm .completeButton .labelMobile,
+  .detailPage .surveyForm .completeButton .checkIcon {
+    display: inline-block;
+  }
+}
 

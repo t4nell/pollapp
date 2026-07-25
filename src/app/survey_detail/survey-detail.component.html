@@ -3,7 +3,14 @@
   <div class="surveyForm">
 
     <div class="surveyMeta">
-      <span class="statusBadge">{{ survey.status }}</span>
+
+      <div class="statusBar">
+        <span class="statusBadge">{{ survey.status }}</span>
+        <button class="backButton" (click)="goToHome()">
+          X
+        </button>
+      </div>
+
       <div class="metaRow">
         <p class="endDate">Ends on {{ survey.end_data }}</p>
         <p class="category">Category: {{ survey.category }}</p>
@@ -16,7 +23,7 @@
     <div class="questionsGrid">
       <div class="questionCard" *ngFor="let question of questions">
         <p class="questionText">{{ question.order }}. {{ question.text }}</p>
-        <p class="multiHint" *ngIf="question.multiple">More than one answers are possible.</p>
+        <p class="multiHint" *ngIf="question.multiple">More than one answer is possible.</p>
         <div class="optionsList">
           <label class="option" *ngFor="let option of question.options; let i = index" [class.selected]="isSelected(question.id, i)">
             <input type="checkbox" [checked]="isSelected(question.id, i)" (change)="selectOption(question.id, i)">
@@ -27,7 +34,13 @@
     </div>
 
     <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : 'Complete survey' }}
+      @if (isSubmitting) {
+        Submitting...
+      } @else {
+        <span class="labelDesktop">Complete survey</span>
+        <span class="labelMobile">Complete</span>
+        <img src="check.png" alt="" class="checkIcon">
+      }
     </button>
 
     <div class="submitOverlay" *ngIf="submitMessage"> {{ submitMessage }} </div>

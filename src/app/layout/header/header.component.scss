@@ -36,3 +36,9 @@ img {
     background: #ffb770;
   }
 }
+
+@media (max-width: 600px) {
+  .createSurveyButton {
+    display: none;
+  }
+}

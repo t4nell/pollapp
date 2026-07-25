@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Survey, Question } from '../shared/interfaces/survey.interface';
 import { SurveyService } from '../shared/services/survey.service';
+
+type AnswerInsert = { survey_id: number; question_id: number; option_index: number };
+type StoredAnswer = { question_id: number; option_index: number };
 
 @Component({
   selector: 'survey-detail',
@@ -23,6 +26,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private surveyService: SurveyService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -42,21 +46,13 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   selectOption(questionId: number, optionIndex: number) {
-    const question = this.questions.find((q) => q.id === questionId);
-
+    const question = this.findQuestionById(questionId);
     if (!question) return;
-
-    const current = this.selectedOptions[questionId] ?? [];
-
     if (question.multiple) {
-      const alreadySelected = current.includes(optionIndex);
-
-      this.selectedOptions[questionId] = alreadySelected
-        ? current.filter((i) => i !== optionIndex)
-        : [...current, optionIndex];
-    } else {
-      this.selectedOptions[questionId] = [optionIndex];
+      this.toggleMultiChoice(questionId, optionIndex);
+      return;
     }
+    this.selectedOptions[questionId] = [optionIndex];
   }
 
   isSelected(questionId: number, optionIndex: number): boolean {
@@ -65,44 +61,93 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
   private showSubmitMessage(message: string) {
     this.submitMessage = message;
-
-    if (this.submitMessageTimer) {
-      clearTimeout(this.submitMessageTimer);
-    }
-
-    this.submitMessageTimer = setTimeout(() => {
-      this.submitMessage = '';
-      this.cdr.detectChanges();
-    }, 3400);
+    this.clearSubmitMessageTimer();
+    this.submitMessageTimer = setTimeout(() => this.clearSubmitMessage(), 3400);
   }
 
   async onCompleteSurvey() {
     if (!this.survey) return;
 
-    const answersToSave: Array<{ survey_id: number; question_id: number; option_index: number }> = [];
-
-    for (const question of this.questions) {
-      const selected = this.selectedOptions[question.id] ?? [];
-
-      for (const optionIndex of selected) {
-        answersToSave.push({
-          survey_id: this.survey.id,
-          question_id: question.id,
-          option_index: optionIndex,
-        });
-      }
-    }
-
+    const answersToSave = this.buildAnswersToSave(this.survey.id);
     if (answersToSave.length === 0) {
       this.showSubmitMessage('Please select at least one answer.');
       return;
     }
 
+    await this.submitAnswers(answersToSave);
+  }
+
+  private async loadResults() {
+    if (!this.survey) return;
+
+    const answers = await this.surveyService.getAnswersBySurveyId(this.survey.id);
+    const counts = this.createInitialCounts();
+    const totals = this.createInitialTotals();
+    this.applyAnswersToResults(answers, counts, totals);
+    this.resultsByQuestion = counts;
+    this.totalAnswersByQuestion = totals;
+  }
+
+  ngOnDestroy() {
+    this.clearSubmitMessageTimer();
+  }
+
+  getResultPercent(questionId: number, optionIndex: number): number {
+    const total = this.totalAnswersByQuestion[questionId] ?? 0;
+    const count = this.resultsByQuestion[questionId]?.[optionIndex] ?? 0;
+    return this.calculatePercent(count, total);
+  }
+
+  getOptionLetter(optionIndex: number): string {
+    return `${String.fromCharCode(65 + optionIndex)}`;
+  }
+
+  hasAnyResults(): boolean {
+    return Object.values(this.totalAnswersByQuestion).some((total) => total > 0);
+  }
+
+  goToHome() {
+    this.router.navigate(['/']);
+  }
+
+  private findQuestionById(questionId: number): Question | undefined {
+    return this.questions.find((question) => question.id === questionId);
+  }
+
+  private toggleMultiChoice(questionId: number, optionIndex: number) {
+    const current = this.selectedOptions[questionId] ?? [];
+    const alreadySelected = current.includes(optionIndex);
+    this.selectedOptions[questionId] = alreadySelected
+      ? current.filter((index) => index !== optionIndex)
+      : [...current, optionIndex];
+  }
+
+  private clearSubmitMessageTimer() {
+    if (!this.submitMessageTimer) return;
+    clearTimeout(this.submitMessageTimer);
+    this.submitMessageTimer = null;
+  }
+
+  private clearSubmitMessage() {
+    this.submitMessage = '';
+    this.cdr.detectChanges();
+  }
+
+  private buildAnswersToSave(surveyId: number): AnswerInsert[] {
+    return this.questions.flatMap((question) => this.buildQuestionAnswers(surveyId, question.id));
+  }
+
+  private buildQuestionAnswers(surveyId: number, questionId: number): AnswerInsert[] {
+    const selected = this.selectedOptions[questionId] ?? [];
+    return selected.map((optionIndex) => ({ survey_id: surveyId, question_id: questionId, option_index: optionIndex }));
+  }
+
+  private async submitAnswers(answersToSave: AnswerInsert[]) {
     this.isSubmitting = true;
     this.submitMessage = '';
 
     try {
-      await this.surveyService.saveAnswers(answersToSave);
+      await this.saveAnswersWithTimeout(answersToSave);
       await this.loadResults();
       this.showSubmitMessage('Survey submitted successfully.');
     } catch (error) {
@@ -114,52 +159,52 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async loadResults() {
-    if (!this.survey) return;
+  private async saveAnswersWithTimeout(answersToSave: AnswerInsert[]) {
+    await Promise.race([this.surveyService.saveAnswers(answersToSave), this.createTimeoutPromise()]);
+  }
 
-    const answers = await this.surveyService.getAnswersBySurveyId(this.survey.id);
+  private createTimeoutPromise(): Promise<never> {
+    return new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000));
+  }
 
+  private createInitialCounts(): Record<number, number[]> {
     const counts: Record<number, number[]> = {};
-    const totals: Record<number, number> = {};
-
     for (const question of this.questions) {
       const optionCount = question.options?.length ?? 0;
       counts[question.id] = new Array(optionCount).fill(0);
+    }
+    return counts;
+  }
+
+  private createInitialTotals(): Record<number, number> {
+    const totals: Record<number, number> = {};
+    for (const question of this.questions) {
       totals[question.id] = 0;
     }
+    return totals;
+  }
 
+  private applyAnswersToResults(
+    answers: StoredAnswer[],
+    counts: Record<number, number[]>,
+    totals: Record<number, number>
+  ) {
     for (const answer of answers) {
-      const questionCounts = counts[answer.question_id];
-      if (!questionCounts) continue;
-      if (answer.option_index < 0 || answer.option_index >= questionCounts.length) continue;
-
-      questionCounts[answer.option_index] += 1;
+      if (!this.isValidAnswerIndex(counts, answer)) continue;
+      counts[answer.question_id][answer.option_index] += 1;
       totals[answer.question_id] += 1;
     }
-
-    this.resultsByQuestion = counts;
-    this.totalAnswersByQuestion = totals;
   }
 
-  ngOnDestroy() {
-    if (this.submitMessageTimer) {
-      clearTimeout(this.submitMessageTimer);
-    }
+  private isValidAnswerIndex(counts: Record<number, number[]>, answer: StoredAnswer): boolean {
+    const questionCounts = counts[answer.question_id];
+    if (!questionCounts) return false;
+    const index = answer.option_index;
+    return index >= 0 && index < questionCounts.length;
   }
 
-  getResultPercent(questionId: number, optionIndex: number): number {
-    const total = this.totalAnswersByQuestion[questionId] ?? 0;
+  private calculatePercent(count: number, total: number): number {
     if (total === 0) return 0;
-
-    const count = this.resultsByQuestion[questionId]?.[optionIndex] ?? 0;
     return Math.round((count / total) * 100);
-  }
-
-  getOptionLetter(optionIndex: number): string {
-    return `${String.fromCharCode(65 + optionIndex)}`;
-  }
-
-  hasAnyResults(): boolean {
-    return Object.values(this.totalAnswersByQuestion).some((total) => total > 0);
   }
 }

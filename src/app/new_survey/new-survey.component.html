@@ -18,7 +18,10 @@
       <div class="metaGrid">
         <div class="leftMeta">
           <div class="field">
-            <label for="surveyName"><span class="requiredStar">*</span>Survey name</label>
+            <div class="labelWithBackButton">
+              <label for="surveyName"><span class="requiredStar">*</span>Survey name</label>
+              <button type="button" class="backButton" (click)="goToHome()">X</button>
+            </div>
             <div class="inputWithIcon">
               <input id="surveyName" type="text" [(ngModel)]="surveyName" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
@@ -52,7 +55,7 @@
                 (keydown.escape)="isCategoryOpen = false"
               >
                 <option value="">Select category</option>
-                <option value="Team activitie">Team activitie</option>
+                <option value="Team activitie">Team activity</option>
                 <option value="Health & Wellness">Health & Wellness</option>
                 <option value="Gaming & Entertainment">Gaming & Entertainment</option>
                 <option value="Education & Learning">Education & Learning</option>
@@ -65,7 +68,7 @@
 
         <div class="rightMeta">
           <div class="field">
-            <label for="description">Discribing text <span>(optional)</span></label>
+            <label for="description">Description text <span>(optional)</span></label>
             <div class="inputWithIcon">
               <textarea id="description" rows="4" [(ngModel)]="description"></textarea>
               <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
@@ -90,7 +93,7 @@
             </button>
           </div>
 
-          <input type="text" [(ngModel)]="question.text" placeholder="Which date would work best for you?" />
+          <input type="text" [(ngModel)]="question.text"/>
 
           <div class="answersHeader">
             <p><span class="requiredStar">*</span>Answers</p>

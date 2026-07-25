@@ -20,39 +20,51 @@ export class AllSurveys implements OnInit {
     selectedCategory = '';
 
     get filteredSurveys(): Survey[] {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        return this.surveys.filter((survey) => this.matchesSurveyFilters(survey));
+    }
 
-        return this.surveys.filter((survey) => {
-            const matchesCategory =
-                !this.selectedCategory || survey.category === this.selectedCategory;
+    private matchesSurveyFilters(survey: Survey): boolean {
+      return this.matchesCategory(survey) && this.matchesStatus(survey);
+    }
 
-            const endDate = new Date(survey.end_data);
-            endDate.setHours(23, 59, 59, 999);
+    private matchesCategory(survey: Survey): boolean {
+      return !this.selectedCategory || survey.category === this.selectedCategory;
+    }
 
-            const isActive = endDate.getTime() >= today.getTime();
-            const isPast = endDate.getTime() < today.getTime();
+    private matchesStatus(survey: Survey): boolean {
+      if (!this.activeFilter) return true;
+      if (this.activeFilter === 'active') return this.isSurveyActive(survey.end_data);
+      return !this.isSurveyActive(survey.end_data);
+    }
 
-            const matchesStatus =
-                !this.activeFilter ||
-                (this.activeFilter === 'active' && isActive) ||
-                (this.activeFilter === 'past' && isPast);
+    private isSurveyActive(endDate: string): boolean {
+      const endOfDay = this.toEndOfDayTimestamp(endDate);
+      return endOfDay >= this.getTodayStartTimestamp();
+    }
 
-            return matchesCategory && matchesStatus;
-        });
+    private toEndOfDayTimestamp(dateValue: string): number {
+      const date = new Date(dateValue);
+      date.setHours(23, 59, 59, 999);
+      return date.getTime();
+    }
+
+    private getTodayStartTimestamp(): number {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return today.getTime();
     }
 
     toggleFilter(filter: 'active' | 'past') {
-        this.activeFilter = this.activeFilter === filter ? null : filter;
+      this.activeFilter = this.activeFilter === filter ? null : filter;
     }
 
     @HostListener('document:keydown.escape')
     onEscape() {
-        this.isSelectOpen = false;
+      this.isSelectOpen = false;
     }
 
     navigateToSurvey(id: number) {
-        this.router.navigate(['/survey', id]);
+      this.router.navigate(['/survey', id]);
     }
 
     isSurveyExpired(survey: Survey): boolean {

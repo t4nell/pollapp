@@ -104,3 +104,45 @@
         };
     };
 };
+
+@media (max-width: 1200px) {
+    :host {
+        padding: 0 16px 50px 16px;
+    };
+};
+
+@media (max-width: 1050px) {
+  .yourSurveysContainer {
+    width: 100%;
+    overflow: hidden;
+
+    .endingSoonSurveys {
+      justify-content: flex-start;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      flex-wrap: nowrap;
+
+      /* wie in allSurveys */
+      scrollbar-color: #FFB770 transparent; /* Firefox */
+      scrollbar-width: thin;
+
+      &::-webkit-scrollbar {
+        height: 6px; /* horizontal => height statt width */
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #FFB770;
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .yourSurveysContainer .endingSoonSurveys .surveyCard {
+    flex-shrink: 0;
+  }
+}

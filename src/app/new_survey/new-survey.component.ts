@@ -100,7 +100,7 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   onCancel() {
-    this.router.navigate(['/']);
+    this.goToHome();
   }
 
   clearSurveyName() {
@@ -117,108 +117,136 @@ export class NewSurveyComponent implements OnDestroy {
 
   async publishSurvey() {
     if (this.isPublishing) return;
+    this.preparePublishAttempt();
+
+    const validationError = this.getPublishValidationError();
+    if (validationError) {
+      this.publishError = validationError;
+      return;
+    }
+
+    await this.executePublish();
+  }
+
+  private preparePublishAttempt() {
     this.publishError = '';
     this.publishSuccessMessage.set('');
-    if (this.redirectTimer) {
-      clearTimeout(this.redirectTimer);
-      this.redirectTimer = null;
-    }
+    this.clearRedirectTimer();
+  }
+
+  private getPublishValidationError(): string | null {
+    if (!this.surveyName.trim()) return 'Please enter a survey name.';
+    if (!this.category) return 'Please select a category.';
+    return this.validateQuestions();
+  }
+
+  private async executePublish() {
+    this.isPublishing = true;
     let createdSurveyId: number | null = null;
 
-    if (!this.surveyName.trim()) {
-      this.publishError = 'Please enter a survey name.';
-      return;
-    }
-
-    if (!this.category) {
-      this.publishError = 'Please select a category.';
-      return;
-    }
-
-    const questionValidationError = this.validateQuestions();
-    if (questionValidationError) {
-      this.publishError = questionValidationError;
-      return;
-    }
-
-    this.isPublishing = true;
-
     try {
-      const createdSurvey = await this.surveyService.createSurvey({
-        name: this.surveyName.trim(),
-        category: this.category,
-        discription: this.description.trim(),
-        end_data: this.endDate || null,
-      });
-      createdSurveyId = createdSurvey.id;
-
-      const questionsToCreate = this.questions.map((question, index) => ({
-        survey_id: createdSurvey.id,
-        text: question.text.trim(),
-        multiple: question.multiple,
-        order: index + 1,
-        options: question.answers
-          .map((answer) => answer.trim())
-          .filter((answer) => answer !== ''),
-      }));
-
-      await this.surveyService.createQuestions(questionsToCreate);
-      this.publishSuccessMessage.set('Your survey is now published');
-
-      if (this.successMessageTimer) {
-        clearTimeout(this.successMessageTimer);
-      }
-
-      this.successMessageTimer = setTimeout(() => {
-        this.publishSuccessMessage.set('');
-      }, 3200);
-
-      this.redirectTimer = setTimeout(() => {
-        this.router.navigate(['/']);
-      }, 1200);
-
-      console.log('Created survey:', createdSurvey);
+      createdSurveyId = await this.createSurveyWithQuestions();
+      this.handlePublishSuccess();
     } catch (error) {
-      if (createdSurveyId !== null) {
-        try {
-          await this.surveyService.deleteSurveyById(createdSurveyId);
-        } catch (rollbackError) {
-          console.error('Rollback failed:', rollbackError);
-        }
-      }
-
-      console.error(error);
-      this.publishError = 'Failed to publish survey.';
+      await this.handlePublishFailure(error, createdSurveyId);
     } finally {
       this.isPublishing = false;
     }
   }
 
+  private async createSurveyWithQuestions(): Promise<number> {
+    const survey = await this.surveyService.createSurvey(this.buildSurveyPayload());
+    const questions = this.buildQuestionsPayload(survey.id);
+    await this.surveyService.createQuestions(questions);
+    return survey.id;
+  }
+
+  private buildSurveyPayload() {
+    return {
+      name: this.surveyName.trim(),
+      category: this.category,
+      discription: this.description.trim(),
+      end_data: this.endDate || null,
+    };
+  }
+
+  private buildQuestionsPayload(surveyId: number) {
+    return this.questions.map((question, index) => ({
+      survey_id: surveyId,
+      text: question.text.trim(),
+      multiple: question.multiple,
+      order: index + 1,
+      options: this.getNonEmptyAnswers(question),
+    }));
+  }
+
+  private getNonEmptyAnswers(question: DraftQuestion): string[] {
+    return question.answers.map((answer) => answer.trim()).filter((answer) => answer !== '');
+  }
+
+  private handlePublishSuccess() {
+    this.publishSuccessMessage.set('Your survey is now published');
+    this.scheduleSuccessMessageClear();
+    this.scheduleHomeRedirect();
+  }
+
+  private scheduleSuccessMessageClear() {
+    this.clearSuccessMessageTimer();
+    this.successMessageTimer = setTimeout(() => this.publishSuccessMessage.set(''), 3200);
+  }
+
+  private scheduleHomeRedirect() {
+    this.redirectTimer = setTimeout(() => this.goToHome(), 1200);
+  }
+
+  private async handlePublishFailure(error: unknown, createdSurveyId: number | null) {
+    await this.rollbackCreatedSurvey(createdSurveyId);
+    console.error(error);
+    this.publishError = 'Failed to publish survey.';
+  }
+
+  private async rollbackCreatedSurvey(createdSurveyId: number | null) {
+    if (createdSurveyId === null) return;
+
+    try {
+      await this.surveyService.deleteSurveyById(createdSurveyId);
+    } catch (rollbackError) {
+      console.error('Rollback failed:', rollbackError);
+    }
+  }
+
   private validateQuestions(): string | null {
     for (let i = 0; i < this.questions.length; i++) {
-      const question = this.questions[i];
-      const questionNumber = i + 1;
-
-      if (!question.text.trim()) {
-        return `Please enter text for question ${questionNumber}.`;
-      }
-
-      const nonEmptyAnswers = question.answers.filter((answer) => answer.trim() !== '');
-
-      if (nonEmptyAnswers.length < 2) {
-        return `Question ${questionNumber} needs at least 2 answers.`;
-      }
+      const error = this.getQuestionValidationError(this.questions[i], i + 1);
+      if (error) return error;
     }
-
     return null;
   }
 
+  private getQuestionValidationError(question: DraftQuestion, questionNumber: number): string | null {
+    if (!question.text.trim()) return `Please enter text for question ${questionNumber}.`;
+    if (this.getNonEmptyAnswers(question).length < 2) return `Question ${questionNumber} needs at least 2 answers.`;
+    return null;
+  }
+
+  private clearSuccessMessageTimer() {
+    if (!this.successMessageTimer) return;
+    clearTimeout(this.successMessageTimer);
+    this.successMessageTimer = null;
+  }
+
+  private clearRedirectTimer() {
+    if (!this.redirectTimer) return;
+    clearTimeout(this.redirectTimer);
+    this.redirectTimer = null;
+  }
+
   ngOnDestroy() {
-    if (this.successMessageTimer) {
-      clearTimeout(this.successMessageTimer);
-    }
-    if (this.redirectTimer) {
-      clearTimeout(this.redirectTimer);
-    }
+    this.clearSuccessMessageTimer();
+    this.clearRedirectTimer();
+  }
+
+  goToHome() {
+    this.router.navigate(['/']);
   }
 }

@@ -22,10 +22,12 @@
 body {
     display: flex;
     justify-content: center;
+    width: 100%;
 };
 
 app-root {
-    width: 1440px;
+    width: 100%;
+    max-width: 1440px;
 };
 
 button {

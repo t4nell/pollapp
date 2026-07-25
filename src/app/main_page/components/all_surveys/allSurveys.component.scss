@@ -26,7 +26,7 @@
         .activeButton {
             background: #FEE9D4;
             width: 126px;
-            height: 25px;
+            min-height: 25px;
             gap: 10px;
             opacity: 1;
             padding-top: 2px;
@@ -55,7 +55,7 @@
         .pastButton {
             background: #FEE9D4;
             width: 119px;
-            height: 25px;
+            min-height: 25px;
             gap: 10px;
             opacity: 1;
             padding-top: 2px;
@@ -240,4 +240,37 @@
     font-family: 'Mulish', sans-serif;
     font-size: 16px;
     color: #FFCFA1;
+}
+
+@media (max-width: 1000px) {
+  .filterBar {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .filterBar .filterButtonsContainer {
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 32px;
+  }
+
+  .filterBar .sortByCategory {
+    align-self: flex-start;
+  }
+
+  .surveyCardsContainer {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px){
+    :host {
+        padding: 0 16px 50px 16px;
+        align-items: center;
+        width: calc(100% - 32px);
+    }
 }

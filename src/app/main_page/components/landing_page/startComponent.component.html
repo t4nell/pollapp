@@ -1,15 +1,21 @@
 <div class="textContainer">
-    <h1>Collect Feedback, Unlock Ideas</h1>
-    <p>
-        Create and share surveys in minutes – from team events to workplace culture. 
-        Collect opinions, engage your audience, and turn feedback into action.
-    </p>
-    <button (click)="goToNewSurvey()">
-        New survey
-        <img src="add_circle.png" class="btnIcon" alt="">
-    </button>
-</div>
+  <h1>Collect Feedback, Unlock Ideas</h1>
 
-<div>
-    <img [src]="currentImage" (mouseenter)="currentImage = 'handy_image_2.png'" (mouseleave)="currentImage = 'handy_image.png'" alt="Handy Image" class="handyImage">
+  <img
+    [src]="currentImage"
+    (mouseenter)="currentImage = 'handy_image_2.png'"
+    (mouseleave)="currentImage = 'handy_image.png'"
+    alt="Handy Image"
+    class="handyImage"
+  />
+
+  <p>
+    Create and share surveys in minutes – from team events to workplace culture.
+    Collect opinions, engage your audience, and turn feedback into action.
+  </p>
+
+  <button (click)="goToNewSurvey()">
+    New survey
+    <img src="add_circle.png" class="btnIcon" alt="" />
+  </button>
 </div>
