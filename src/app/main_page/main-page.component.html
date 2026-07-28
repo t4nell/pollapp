@@ -1,3 +1,11 @@
 <start-component></start-component>
 <ending-soon-surveys></ending-soon-surveys>
 <all-surveys></all-surveys>
+
+@if (uiState.isNewSurveyOpen()) {
+  <div class="newSurveyOverlay" (click)="closeOverlay()">
+    <div class="newSurveyDialog" (click)="$event.stopPropagation()">
+      <new-survey></new-survey>
+    </div>
+  </div>
+}

@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { Supabase } from './supabase';
 
@@ -12,5 +12,4 @@ import { Supabase } from './supabase';
 export class App {
   protected readonly title = signal('pollapp');
   dbService = inject(Supabase);
-  router = inject(Router); // neu
 }

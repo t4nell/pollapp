@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
+import { UiStateService } from '../../shared/services/ui-state.service';
 
 @Component({
   selector: 'main-header',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  constructor(public router: Router) {}
+  constructor(public router: Router, private uiState: UiStateService) {}
 
   @HostBinding('class.survey-detail-header')
   get isSurveyDetail(): boolean {
@@ -20,7 +21,7 @@ export class HeaderComponent {
   }
 
   goToNewSurvey() {
-    this.router.navigate(['/new-survey']);
+    this.uiState.openNewSurvey();
   }
 
   goToHome() {

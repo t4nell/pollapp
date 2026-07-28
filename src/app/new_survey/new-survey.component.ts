@@ -1,8 +1,8 @@
 import { Component, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { SurveyService } from '../shared/services/survey.service';
+import { UiStateService } from '../shared/services/ui-state.service';
 
 type DraftQuestion = {
   id: number;
@@ -39,7 +39,7 @@ export class NewSurveyComponent implements OnDestroy {
     },
   ];
 
-  constructor (private router: Router, private surveyService: SurveyService) {}
+  constructor (private uiState: UiStateService, private surveyService: SurveyService) {}
 
   surveyName = '';
   category = '';
@@ -100,7 +100,7 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   onCancel() {
-    this.goToHome();
+    this.uiState.closeNewSurvey();
   }
 
   clearSurveyName() {
@@ -247,6 +247,6 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   goToHome() {
-    this.router.navigate(['/']);
+    this.uiState.closeNewSurvey();
   }
 }

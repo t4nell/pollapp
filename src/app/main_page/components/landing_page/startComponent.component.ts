@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { UiStateService } from '../../../shared/services/ui-state.service';
 
 @Component({
   selector: 'start-component',
@@ -10,9 +10,9 @@ import { Router } from '@angular/router';
 export class StartComponent {
   currentImage = 'handy_image.png';
 
-  constructor(private router: Router) {}
+  constructor(private uiState: UiStateService) {}
 
   goToNewSurvey() {
-    this.router.navigate(['/new-survey']);
+    this.uiState.openNewSurvey();
   }
 }

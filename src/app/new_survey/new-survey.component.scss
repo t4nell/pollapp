@@ -1,7 +1,5 @@
 :host {
   display: block;
-  background: #f2f2f2;
-  min-height: calc(100vh - 64px);
   padding: 24px 20px 40px;
 }
 
@@ -53,7 +51,7 @@
   h1 {
     font-family: 'NerkoOne', sans-serif;
     font-size: 56px;
-    line-height: 0.95;
+    line-height: 42px;
     font-weight: 400;
     color: #EE9236;
   }
@@ -72,7 +70,7 @@
   padding: 4px 12px;
   border-top-right-radius: 20px;
   font-family: 'Mulish', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -182,7 +180,7 @@ textarea {
 }
 
 select {
-    width: calc(100% + 20px);
+    width: auto;
     height: 32px;
     border: none;
     outline: none;
@@ -191,7 +189,7 @@ select {
     border-radius: 4px;
     border-top-right-radius: 20px;
     font-family: 'Mulish', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     box-sizing: border-box;
     cursor: pointer;
@@ -307,7 +305,7 @@ select::-ms-expand {
   background: transparent;
   color: #ffffff;
   font-family: 'Mulish', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
@@ -526,6 +524,10 @@ select::-ms-expand {
   .rowFields .field:not(.categoryField) {
     order: 2;
   }
+  
+  select {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 800px) {
@@ -537,6 +539,8 @@ select::-ms-expand {
   .addQuestionSlot {
     justify-self: start;
   }
+
+  
 }
 
 @media (max-width: 500px) {
@@ -565,5 +569,9 @@ select::-ms-expand {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+  
+  select {
+    font-weight: 600;
   }
 }
