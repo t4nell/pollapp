@@ -1,7 +1,7 @@
 :host {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 60px;
   width: 100%;
   padding-top: 25px;
@@ -14,8 +14,15 @@
   padding-bottom: 50px;
 }
 
+.content-limit{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    max-width: 1440px;
+}
+
 img {
-  margin-left: 50px;
   cursor: pointer;
 }
 

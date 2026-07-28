@@ -1,47 +1,49 @@
-<div class="filterBar">
-    <div class="filterButtonsContainer">
-        <button class="activeButton"
-            [class.is-active]="activeFilter === 'active'"
-            (click)="toggleFilter('active')">Active surveys</button>
-        <button class="pastButton"
-            [class.is-active]="activeFilter === 'past'"
-            (click)="toggleFilter('past')">Past surveys</button>
-    </div>
-    <select class="sortByCategory"
-        [class.is-open]="isSelectOpen"
-        (focus)="isSelectOpen = true"
-        (blur)="isSelectOpen = false"
-        (change)="selectedCategory = $any($event.target).value; isSelectOpen = false"
-        (keydown.escape)="isSelectOpen = false">
-        <option class="filteroption" value="">All categories</option>
-        <option class="filteroption" value="Team activitie">Team activity</option>
-        <option class="filteroption" value="Health & Wellness">Health & Wellness</option>
-        <option class="filteroption" value="Gaming & Entertainment">Gaming & Entertainment</option>
-        <option class="filteroption" value="Education & Learning">Education & Learning</option>
-        <option class="filteroption" value="Lifestyle & Preferences">Lifestyle & Preferences</option>
-        <option class="filteroption" value="Technology & Innovation">Technology & Innovation</option>
-    </select>
-</div>
-
-<div class="surveyCardsContainer" *ngIf="filteredSurveys.length > 0; else noResults">
-
-    <div
-        class="surveyCard"
-        *ngFor="let survey of filteredSurveys"
-        [class.is-expired]="isSurveyExpired(survey)"
-        (click)="!isSurveyExpired(survey) && navigateToSurvey(survey.id)">
-        <div class="surveyInfo">
-            <p class="surveyCategory">{{ survey.category }}</p>
-            <p class="surveyName">{{ survey.name }}</p>
+<div class="content-limit">
+    <div class="filterBar">
+        <div class="filterButtonsContainer">
+            <button class="activeButton"
+                [class.is-active]="activeFilter === 'active'"
+                (click)="toggleFilter('active')">Active surveys</button>
+            <button class="pastButton"
+                [class.is-active]="activeFilter === 'past'"
+                (click)="toggleFilter('past')">Past surveys</button>
         </div>
-        <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
+        <select class="sortByCategory"
+            [class.is-open]="isSelectOpen"
+            (focus)="isSelectOpen = true"
+            (blur)="isSelectOpen = false"
+            (change)="selectedCategory = $any($event.target).value; isSelectOpen = false"
+            (keydown.escape)="isSelectOpen = false">
+            <option class="filteroption" value="">All categories</option>
+            <option class="filteroption" value="Team activitie">Team activity</option>
+            <option class="filteroption" value="Health & Wellness">Health & Wellness</option>
+            <option class="filteroption" value="Gaming & Entertainment">Gaming & Entertainment</option>
+            <option class="filteroption" value="Education & Learning">Education & Learning</option>
+            <option class="filteroption" value="Lifestyle & Preferences">Lifestyle & Preferences</option>
+            <option class="filteroption" value="Technology & Innovation">Technology & Innovation</option>
+        </select>
     </div>
 
-</div>
+    <div class="surveyCardsContainer" *ngIf="filteredSurveys.length > 0; else noResults">
 
-<ng-template #noResults>
-    <div class="emptyState">
-        <p class="emptyTitle">No surveys found</p>
-        <p class="emptyText">Try another category or switch the active/past filter.</p>
+        <div
+            class="surveyCard"
+            *ngFor="let survey of filteredSurveys"
+            [class.is-expired]="isSurveyExpired(survey)"
+            (click)="!isSurveyExpired(survey) && navigateToSurvey(survey.id)">
+            <div class="surveyInfo">
+                <p class="surveyCategory">{{ survey.category }}</p>
+                <p class="surveyName">{{ survey.name }}</p>
+            </div>
+            <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
+        </div>
+
     </div>
-</ng-template>
+
+    <ng-template #noResults>
+        <div class="emptyState">
+            <p class="emptyTitle">No surveys found</p>
+            <p class="emptyText">Try another category or switch the active/past filter.</p>
+        </div>
+    </ng-template>
+</div>    

@@ -1,17 +1,19 @@
-<h2>Your Surveys</h2>
+<div class="content-limit">
+    <h2>Your Surveys</h2>
 
-<div class="yourSurveysContainer">
-    <h3>Ending soon surveys</h3>
+    <div class="yourSurveysContainer">
+        <h3>Ending soon surveys</h3>
 
-    <div class="endingSoonSurveys">
+        <div class="endingSoonSurveys">
 
-        <div class="surveyCard" *ngFor="let survey of surveys" (click)="navigateToSurvey(survey.id)">
-            <div>
-                <p class="surveyCategory">{{ survey.category }}</p>
-                <p class="surveyName">{{ survey.name }}</p>
+            <div class="surveyCard" *ngFor="let survey of surveys" (click)="navigateToSurvey(survey.id)">
+                <div>
+                    <p class="surveyCategory">{{ survey.category }}</p>
+                    <p class="surveyName">{{ survey.name }}</p>
+                </div>
+                <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
             </div>
-            <p class="surveyEndDate">Ends in: {{ daysRemaining(survey.end_data) }}</p>
-        </div>
 
-    </div>    
-</div> 
+        </div>    
+    </div> 
+</div>
