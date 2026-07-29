@@ -86,8 +86,8 @@
             <button
               type="button"
               class="iconButton"
-              aria-label="Delete question"
-              (click)="removeQuestion(question.id)"
+              aria-label="Clear question text"
+              (click)="clearQuestionText(qIndex, question.id)"
             >
               <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
             </button>
@@ -112,8 +112,8 @@
             <button
               type="button"
               class="iconButton"
-              [attr.aria-label]="'Delete answer ' + getOptionLetter(aIndex)"
-              (click)="removeAnswer(qIndex, aIndex)"
+              [attr.aria-label]="'Clear answer ' + getOptionLetter(aIndex)"
+              (click)="clearAnswerText(qIndex, aIndex)"
             >
               <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
             </button>

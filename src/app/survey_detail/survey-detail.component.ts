@@ -47,6 +47,8 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   selectOption(questionId: number, optionIndex: number) {
+    if (this.isSurveyExpired()) return;
+
     const question = this.findQuestionById(questionId);
     if (!question) return;
     if (question.multiple) {
@@ -105,6 +107,15 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
   hasAnyResults(): boolean {
     return Object.values(this.totalAnswersByQuestion).some((total) => total > 0);
+  }
+
+  isSurveyExpired(): boolean {
+    if (!this.survey?.end_data) return false;
+
+    const endDate = new Date(this.survey.end_data);
+    endDate.setHours(23, 59, 59, 999);
+
+    return endDate.getTime() < Date.now();
   }
 
   goToHome() {

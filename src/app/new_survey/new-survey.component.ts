@@ -60,9 +60,16 @@ export class NewSurveyComponent implements OnDestroy {
     });
   }
 
-  removeQuestion(questionId: number) {
-    if (this.questions.length <= 1) return;
-    this.questions = this.questions.filter((question) => question.id !== questionId);
+  clearQuestionText(questionIndex: number, questionId: number) {
+    const question = this.questions[questionIndex];
+    if (!question) return;
+
+    if (questionIndex === 0) {
+      question.text = '';
+      return;
+    }
+
+    this.questions.splice(questionIndex, 1);
   }
 
   trackByQuestion(_index: number, question: DraftQuestion): number {
@@ -77,9 +84,15 @@ export class NewSurveyComponent implements OnDestroy {
     question.answers.push('');
   }
 
-  removeAnswer(questionIndex: number, answerIndex: number) {
+  clearAnswerText(questionIndex: number, answerIndex: number) {
     const question = this.questions[questionIndex];
-    if (question.answers.length <= 2) return;
+    if (!question) return;
+
+    if (answerIndex < 2) {
+      question.answers[answerIndex] = '';
+      return;
+    }
+
     question.answers.splice(answerIndex, 1);
   }
 

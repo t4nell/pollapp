@@ -25,15 +25,23 @@
         <p class="questionText">{{ question.order }}. {{ question.text }}</p>
         <p class="multiHint" *ngIf="question.multiple">More than one answer is possible.</p>
         <div class="optionsList">
-          <label class="option" *ngFor="let option of question.options; let i = index" [class.selected]="isSelected(question.id, i)">
-            <input type="checkbox" [checked]="isSelected(question.id, i)" (change)="selectOption(question.id, i)">
+          <label
+            class="option"
+            *ngFor="let option of question.options; let i = index"
+            [class.selected]="isSelected(question.id, i)"
+            [class.is-expired]="isSurveyExpired()">
+            <input
+              type="checkbox"
+              [checked]="isSelected(question.id, i)"
+              [disabled]="isSurveyExpired()"
+              (change)="selectOption(question.id, i)">
             <span class="optionText">{{ option }}</span>
           </label>
         </div>
       </div>
     </div>
 
-    <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting || hasSubmitted">
+    <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting || hasSubmitted || isSurveyExpired()">
       @if (isSubmitting) {
         Submitting...
       } @else {
