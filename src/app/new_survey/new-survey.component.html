@@ -1,5 +1,5 @@
 <div class="createSurveyPage">
-  <div class="createSurveyCard">
+  <div class="createSurveyCard" (focusout)="markRequiredFieldsVisible()">
 
     <div class="topBar">
       <div class="titleArea">
@@ -23,7 +23,7 @@
               <button type="button" class="backButton" (click)="goToHome()">X</button>
             </div>
             <div class="inputWithIcon">
-              <input id="surveyName" type="text" [(ngModel)]="surveyName" />
+              <input id="surveyName" type="text" [(ngModel)]="surveyName" [class.required-invalid]="isSurveyNameInvalid()" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -48,6 +48,7 @@
                 id="category"
                 [(ngModel)]="category"
                 [class.is-open]="isCategoryOpen"
+                [class.required-invalid]="isCategoryInvalid()"
                 (mousedown)="isCategoryOpen = true"
                 (focus)="isCategoryOpen = true"
                 (change)="isCategoryOpen = false"
@@ -93,7 +94,7 @@
             </button>
           </div>
 
-          <input type="text" [(ngModel)]="question.text"/>
+          <input type="text" [(ngModel)]="question.text" [class.required-invalid]="isQuestionInvalid(question)" />
 
           <div class="answersHeader">
             <p><span class="requiredStar">*</span>Answers</p>
@@ -108,7 +109,7 @@
             *ngFor="let answer of question.answers; let aIndex = index; trackBy: trackByAnswerIndex"
           >
             <span class="answerLetter">{{ getOptionLetter(aIndex) }}.</span>
-            <input type="text" [(ngModel)]="question.answers[aIndex]" />
+            <input type="text" [(ngModel)]="question.answers[aIndex]" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex)" />
             <button
               type="button"
               class="iconButton"
@@ -147,7 +148,15 @@
 
     <div class="bottomBar">
       <p class="publishError" *ngIf="publishError">{{ publishError }}</p>
-      <button type="button" class="publishButton" (click)="publishSurvey()" [disabled]="isPublishing" [class.is-disabled]="isPublishing">Publish</button>
+      <button
+        type="button"
+        class="publishButton"
+        (click)="publishSurvey()"
+        [disabled]="!canPublish || isPublishing"
+        [class.is-disabled]="!canPublish || isPublishing"
+      >
+        Publish
+      </button>
     </div>
 
   </div>

@@ -157,8 +157,7 @@ input[type='text'],
 input[type='date'],
 textarea {
   width: 100%;
-  border: none;
-  outline: none;
+  border: 2px solid transparent;
   background: #f1f1f1;
   color: #2f2f2f;
   border-radius: 4px;
@@ -167,6 +166,7 @@ textarea {
   font-size: 18px;
   padding: 9px 12px;
   box-sizing: border-box;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 input[type='text']::placeholder,
@@ -179,10 +179,15 @@ textarea {
   min-height: 92px;
 }
 
+.required-invalid {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.16);
+}
+
 select {
     width: auto;
     height: 32px;
-    border: none;
+    border: 2px solid transparent;
     outline: none;
     background-color: transparent;
     color: #ffffff;
@@ -201,6 +206,7 @@ select {
     background-position: right 8px center;
     padding-right: 28px;
     padding-left: 8px;
+    transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
 
     &:hover {
         background-color: #D9D9D91F;
@@ -434,20 +440,6 @@ select::-ms-expand {
   font-weight: 800;
   font-size: 0.9em;
   margin-right: 4px;
-}
-
-.questionLimitHint {
-  margin-top: 8px;
-  color: #ffb770;
-  font-size: 14px;
-  font-family: 'Mulish', sans-serif;
-}
-
-.answerLimitHint {
-  margin-top: 6px;
-  color: #ffb770;
-  font-family: 'Mulish', sans-serif;
-  font-size: 14px;
 }
 
 .categoryField {

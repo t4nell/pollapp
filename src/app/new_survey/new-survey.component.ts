@@ -22,6 +22,7 @@ type DraftQuestion = {
 
 export class NewSurveyComponent implements OnDestroy {
   isCategoryOpen = false;
+  showRequiredErrors = false;
   publishSuccessMessage = signal('');
   maxAnswers = 6;
   maxQuestions = 6;
@@ -126,6 +127,33 @@ export class NewSurveyComponent implements OnDestroy {
 
   clearDescription() {
     this.description = '';
+  }
+
+  markRequiredFieldsVisible() {
+    this.showRequiredErrors = true;
+  }
+
+  isSurveyNameInvalid(): boolean {
+    return this.showRequiredErrors && !this.surveyName.trim();
+  }
+
+  isCategoryInvalid(): boolean {
+    return this.showRequiredErrors && !this.category;
+  }
+
+  isQuestionInvalid(question: DraftQuestion): boolean {
+    return this.showRequiredErrors && !question.text.trim();
+  }
+
+  isAnswerInvalid(answer: string, answerIndex: number): boolean {
+    return this.showRequiredErrors && answerIndex < 2 && !answer.trim();
+  }
+
+  get canPublish(): boolean {
+    if (!this.surveyName.trim()) return false;
+    if (!this.category) return false;
+
+    return this.questions.every((question) => this.isQuestionPublishable(question));
   }
 
   async publishSurvey() {
@@ -247,9 +275,17 @@ export class NewSurveyComponent implements OnDestroy {
     return null;
   }
 
+  private isQuestionPublishable(question: DraftQuestion): boolean {
+    const hasQuestionText = question.text.trim().length > 0;
+    const firstTwoAnswersFilled = question.answers.slice(0, 2).every((answer) => answer.trim().length > 0);
+    return hasQuestionText && firstTwoAnswersFilled;
+  }
+
   private getQuestionValidationError(question: DraftQuestion, questionNumber: number): string | null {
     if (!question.text.trim()) return `Please enter text for question ${questionNumber}.`;
-    if (this.getNonEmptyAnswers(question).length < 2) return `Question ${questionNumber} needs at least 2 answers.`;
+    if (!question.answers.slice(0, 2).every((answer) => answer.trim().length > 0)) {
+      return `Question ${questionNumber} needs at least 2 answers.`;
+    }
     return null;
   }
 
