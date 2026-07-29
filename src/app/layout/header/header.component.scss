@@ -16,7 +16,7 @@
 
 .content-limit{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     max-width: 1440px;
@@ -28,22 +28,51 @@ img {
 }
 
 .createSurveyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin-right: 50px;
   background: #ffcfa1;
   color: #2c1f31;
   border: none;
   border-radius: 10px;
-  padding: 12px 18px;
+  padding: 12px 14px;
   font-family: 'Mulish', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   line-height: 1;
+  transition: width 0.3s ease, background 0.3s ease, gap 0.3s ease;
+  overflow: hidden;
+
+  .buttonLabel {
+    transition: width 0.3s ease, opacity 0.3s ease;
+  }
+
+  .buttonIcon {
+    width: 0;
+    height: 20px;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    padding-left: 0;
+    flex-shrink: 0;
+  }
 
   &:hover {
     background: #ffb770;
+
+    .buttonLabel {
+      transform: translateX(-2px);
+    }
+
+    .buttonIcon {
+      width: 20px;
+      opacity: 1;
+    }
   }
 }
+
 
 @media (max-width: 600px) {
   .createSurveyButton {

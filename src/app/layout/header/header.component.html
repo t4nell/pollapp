@@ -1,6 +1,9 @@
 <div class="content-limit">
     <img [src]="logoSrc" alt="Logo" class="logo" (click)="goToHome()">
   @if (isSurveyDetail) {
-    <button type="button" class="createSurveyButton" (click)="goToNewSurvey()">Create Survey</button>
+    <button type="button" class="createSurveyButton" (click)="goToNewSurvey()">
+      <span class="buttonLabel">Create Survey</span>
+      <img src="assets/icons/add_circle.png" alt="" class="buttonIcon" />
+    </button>
   }
 </div>

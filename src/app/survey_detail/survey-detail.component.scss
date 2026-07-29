@@ -1,12 +1,22 @@
 :host {
   display: block;
-  padding: 0 40px 0 40px;
+  padding: 0 40px 40px 40px;
   background: #ffffff;
 };
+
+.content-limit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
 
 .detailPage {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 60px;
   align-items: flex-end;
   padding-bottom: 40px;
@@ -57,7 +67,7 @@
           font-weight: 600;
           cursor: pointer;
           padding: 0;
-          margin-right: 16px;
+          margin-right: 32px;
           display: none;
         };
 
@@ -352,6 +362,11 @@
 
   .detailPage .surveyForm {
     max-width: 100%;
+  }
+
+  .detailPage .surveyForm h1 {
+    font-size: 48px;
+    line-height: 42px;
   }
 
   .detailPage .resultsPanel {
