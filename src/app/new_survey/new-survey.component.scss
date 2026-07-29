@@ -525,9 +525,7 @@ select::-ms-expand {
     order: 2;
   }
   
-  select {
-    font-size: 14px;
-  }
+  
 }
 
 @media (max-width: 800px) {
@@ -572,6 +570,10 @@ select::-ms-expand {
   }
   
   select {
+    font-size: 16px;
     font-weight: 600;
   }
-}
+  .field .label {
+    font-size: 16px;
+  }
+}  

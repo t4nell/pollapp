@@ -6,7 +6,7 @@ type AnswerInsert = { survey_id: number; question_id: number; option_index: numb
 type SurveyCreatePayload = {
   name: string;
   category: string;
-  discription: string;
+  description: string;
   end_data: string | null;
 };
 type QuestionCreatePayload = {

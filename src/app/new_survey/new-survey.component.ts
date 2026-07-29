@@ -165,7 +165,7 @@ export class NewSurveyComponent implements OnDestroy {
     return {
       name: this.surveyName.trim(),
       category: this.category,
-      discription: this.description.trim(),
+      description: this.description.trim(),
       end_data: this.endDate || null,
     };
   }

@@ -3,7 +3,7 @@ export interface Survey {
   created_at: string;
   name: string;
   category: string;
-  discription: string;
+  description: string;
   status: string;
   answerings: boolean;
   end_data: string;
