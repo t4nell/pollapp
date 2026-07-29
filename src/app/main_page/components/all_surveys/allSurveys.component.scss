@@ -104,7 +104,7 @@
         background: transparent;
         appearance: none;
         -webkit-appearance: none;
-        background-image: url(../../../../../public/arrow_drop_down.png);
+        background-image: url(../../../../assets/icons/arrow_drop_down.png);
         background-repeat: no-repeat;
         background-position: right 8px center;
         padding-right: 28px;
@@ -113,14 +113,14 @@
 
         &:hover {
             background-color: #D9D9D91F;
-            background-image: url(../../../../../public/arrow_drop_down_hover.png);
+            background-image: url(../../../../assets/icons/arrow_drop_down_hover.png);
             background-repeat: no-repeat;
             background-position: right 8px center;
         };
 
         &.is-open {
             background-color: #D9D9D91F;
-            background-image: url(../../../../../public/arrow_drop_down_reverse.png);
+            background-image: url(../../../../assets/icons/arrow_drop_down_reverse.png);
             background-repeat: no-repeat;
             background-position: right 8px center;
         };

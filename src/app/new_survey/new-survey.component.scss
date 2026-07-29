@@ -196,7 +196,7 @@ select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('/arrow_drop_down.png');
+    background-image: url('../../assets/icons/arrow_drop_down.png');
     background-repeat: no-repeat;
     background-position: right 8px center;
     padding-right: 28px;
@@ -204,13 +204,13 @@ select {
 
     &:hover {
         background-color: #D9D9D91F;
-        background-image: url('/arrow_drop_down_hover.png');
+        background-image: url('../../assets/icons/arrow_drop_down_hover.png');
         background-repeat: no-repeat;
         background-position: right 8px center;
     }
 
     &.is-open {
-        background-image: url('/arrow_drop_down_reverse.png');
+        background-image: url('../../assets/icons/arrow_drop_down_reverse.png');
         background-repeat: no-repeat;
         background-position: right 8px center;
     }
@@ -426,7 +426,7 @@ select::-ms-expand {
 }
 
 .iconButton:hover .trashIcon {
-  content: url('/property1_hover.png');
+  content: url('../../assets/icons/property1_hover.png');
 }
 
 .requiredStar {

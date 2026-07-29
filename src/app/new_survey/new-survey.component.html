@@ -25,7 +25,7 @@
             <div class="inputWithIcon">
               <input id="surveyName" type="text" [(ngModel)]="surveyName" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
-                <img src="/property1_default.png" alt="" class="trashIcon" />
+                <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
             </div>
           </div>
@@ -36,7 +36,7 @@
               <div class="inputWithIcon">
                 <input id="endDate" type="date" [(ngModel)]="endDate" />
                 <button type="button" class="iconButton" (click)="clearEndDate()" aria-label="Clear end date">
-                  <img src="/property1_default.png" alt="" class="trashIcon" />
+                  <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
                 </button>
               </div>
             </div>
@@ -72,7 +72,7 @@
             <div class="inputWithIcon">
               <textarea id="description" rows="4" [(ngModel)]="description"></textarea>
               <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
-                <img src="/property1_default.png" alt="" class="trashIcon" />
+                <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
             </div>
           </div>
@@ -89,7 +89,7 @@
               aria-label="Delete question"
               (click)="removeQuestion(question.id)"
             >
-              <img src="/property1_default.png" alt="" class="trashIcon" />
+              <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
             </button>
           </div>
 
@@ -115,13 +115,13 @@
               [attr.aria-label]="'Delete answer ' + getOptionLetter(aIndex)"
               (click)="removeAnswer(qIndex, aIndex)"
             >
-              <img src="/property1_default.png" alt="" class="trashIcon" />
+              <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
             </button>
           </div>
 
           <button type="button" class="linkButton" (click)="addAnswer(qIndex)" [disabled]="!canAddAnswer(qIndex)">
             Add answer
-            <img src="/add_circle_light.png" alt="" class="addAnswerIcon" />
+            <img src="assets/icons/add_circle_light.png" alt="" class="addAnswerIcon" />
           </button>
 
           <p class="answerLimitHint" *ngIf="question.hasClickedAddAnswer">
@@ -136,7 +136,7 @@
           [disabled]="!canAddQuestion"
         >
           Add next question
-          <img src="/add_circle_light.png" alt="" class="addQuestionIcon" />
+          <img src="assets/icons/add_circle_light.png" alt="" class="addQuestionIcon" />
         </button>
       </div>
 
