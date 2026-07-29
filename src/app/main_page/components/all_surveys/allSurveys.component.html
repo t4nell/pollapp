@@ -29,8 +29,7 @@
         <div
             class="surveyCard"
             *ngFor="let survey of filteredSurveys"
-            [class.is-expired]="isSurveyExpired(survey)"
-            (click)="!isSurveyExpired(survey) && navigateToSurvey(survey.id)">
+            (click)="navigateToSurvey(survey.id)">
             <div class="surveyInfo">
                 <p class="surveyCategory">{{ survey.category }}</p>
                 <p class="surveyName">{{ survey.name }}</p>

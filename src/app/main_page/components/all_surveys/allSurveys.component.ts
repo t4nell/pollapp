@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 export class AllSurveys implements OnInit {
     surveys: Survey[] = [];
     isSelectOpen = false;
-    activeFilter: 'active' | 'past' | null = null;
+    activeFilter: 'active' | 'past' | null = 'active';
     selectedCategory = '';
 
     get filteredSurveys(): Survey[] {
@@ -65,15 +65,6 @@ export class AllSurveys implements OnInit {
 
     navigateToSurvey(id: number) {
       this.router.navigate(['/survey', id]);
-    }
-
-    isSurveyExpired(survey: Survey): boolean {
-      if (!survey.end_data) return false;
-
-      const endDate = new Date(survey.end_data);
-      endDate.setHours(23, 59, 59, 999);
-
-      return endDate.getTime() < Date.now();
     }
 
   constructor( private surveyService: SurveyService, private router: Router, private cdr: ChangeDetectorRef) {}
