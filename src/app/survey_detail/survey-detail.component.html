@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting">
+    <button class="completeButton" (click)="onCompleteSurvey()" [disabled]="isSubmitting || hasSubmitted">
       @if (isSubmitting) {
         Submitting...
       } @else {

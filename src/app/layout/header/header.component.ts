@@ -22,6 +22,7 @@ export class HeaderComponent {
 
   goToNewSurvey() {
     this.uiState.openNewSurvey();
+    this.router.navigate(['/']);
   }
 
   goToHome() {

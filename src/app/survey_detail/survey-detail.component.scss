@@ -218,6 +218,13 @@
       &:hover {
         background: #ffcfa1;
       };
+
+      &:disabled {
+        background: #c7c7c7;
+        color: #6f6f6f;
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
     };
 
     .submitOverlay {

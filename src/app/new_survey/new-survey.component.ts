@@ -137,6 +137,7 @@ export class NewSurveyComponent implements OnDestroy {
   private getPublishValidationError(): string | null {
     if (!this.surveyName.trim()) return 'Please enter a survey name.';
     if (!this.category) return 'Please select a category.';
+    if (this.hasPastEndDate()) return 'The end date cannot be in the past.';
     return this.validateQuestions();
   }
 
@@ -213,6 +214,16 @@ export class NewSurveyComponent implements OnDestroy {
     } catch (rollbackError) {
       console.error('Rollback failed:', rollbackError);
     }
+  }
+
+  private hasPastEndDate(): boolean {
+    if (!this.endDate) return false;
+
+    const selectedDate = new Date(this.endDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate < today;
   }
 
   private validateQuestions(): string | null {

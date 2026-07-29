@@ -19,6 +19,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   questions: Question[] = [];
   selectedOptions: { [questionId: number]: number[] } = {};
   isSubmitting = false;
+  hasSubmitted = false;
   submitMessage = '';
   private submitMessageTimer: ReturnType<typeof setTimeout> | null = null;
   resultsByQuestion: Record<number, number[]> = {};
@@ -66,7 +67,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   async onCompleteSurvey() {
-    if (!this.survey) return;
+    if (!this.survey || this.hasSubmitted) return;
 
     const answersToSave = this.buildAnswersToSave(this.survey.id);
     if (answersToSave.length === 0) {
@@ -149,6 +150,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     try {
       await this.saveAnswersWithTimeout(answersToSave);
       await this.loadResults();
+      this.hasSubmitted = true;
       this.showSubmitMessage('Survey submitted successfully.');
     } catch (error) {
       console.error(error);
