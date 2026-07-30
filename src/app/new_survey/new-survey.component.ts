@@ -46,7 +46,6 @@ export class NewSurveyComponent implements OnDestroy {
   category = '';
   endDate = '';
   description = '';
-  publishError = '';
   isPublishing = false;
 
   addQuestion() {
@@ -129,7 +128,12 @@ export class NewSurveyComponent implements OnDestroy {
     this.description = '';
   }
 
-  markRequiredFieldsVisible() {
+  handleFieldBlur(event: FocusEvent) {
+    const currentField = event.currentTarget as HTMLElement | null;
+    const nextFocusedElement = event.relatedTarget as Node | null;
+    const overlay = currentField?.closest('.createSurveyCard');
+
+    if (overlay && nextFocusedElement && overlay.contains(nextFocusedElement)) return;
     this.showRequiredErrors = true;
   }
 
@@ -143,6 +147,22 @@ export class NewSurveyComponent implements OnDestroy {
 
   isQuestionInvalid(question: DraftQuestion): boolean {
     return this.showRequiredErrors && !question.text.trim();
+  }
+
+  getQuestionDialogMessage(question: DraftQuestion, questionIndex: number): string | null {
+    if (!this.showRequiredErrors) return null;
+    if (!question.text.trim()) return `Please enter text for question ${questionIndex + 1}.`;
+
+    return null;
+  }
+
+  getAnswerDialogMessage(question: DraftQuestion, questionIndex: number): string | null {
+    if (!this.showRequiredErrors) return null;
+
+    const firstTwoAnswersFilled = question.answers.slice(0, 2).every((answer) => answer.trim().length > 0);
+    if (!firstTwoAnswersFilled) return `Please fill answers A and B for question ${questionIndex + 1}.`;
+
+    return null;
   }
 
   isAnswerInvalid(answer: string, answerIndex: number): boolean {
@@ -162,7 +182,6 @@ export class NewSurveyComponent implements OnDestroy {
 
     const validationError = this.getPublishValidationError();
     if (validationError) {
-      this.publishError = validationError;
       return;
     }
 
@@ -170,7 +189,6 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   private preparePublishAttempt() {
-    this.publishError = '';
     this.publishSuccessMessage.set('');
     this.clearRedirectTimer();
   }
@@ -244,7 +262,6 @@ export class NewSurveyComponent implements OnDestroy {
   private async handlePublishFailure(error: unknown, createdSurveyId: number | null) {
     await this.rollbackCreatedSurvey(createdSurveyId);
     console.error(error);
-    this.publishError = 'Failed to publish survey.';
   }
 
   private async rollbackCreatedSurvey(createdSurveyId: number | null) {

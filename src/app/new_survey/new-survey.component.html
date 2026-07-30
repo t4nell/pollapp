@@ -1,5 +1,5 @@
 <div class="createSurveyPage">
-  <div class="createSurveyCard" (focusout)="markRequiredFieldsVisible()">
+  <div class="createSurveyCard">
 
     <div class="topBar">
       <div class="titleArea">
@@ -17,13 +17,16 @@
 
       <div class="metaGrid">
         <div class="leftMeta">
-          <div class="field">
+          <div class="field surveyNameField">
             <div class="labelWithBackButton">
               <label for="surveyName"><span class="requiredStar">*</span>Survey name</label>
               <button type="button" class="backButton" (click)="goToHome()">X</button>
             </div>
-            <div class="inputWithIcon">
-              <input id="surveyName" type="text" [(ngModel)]="surveyName" [class.required-invalid]="isSurveyNameInvalid()" />
+            <div class="inputWithIcon surveyNameInputWrap">
+              <div class="validationDialog nameValidationDialog" *ngIf="isSurveyNameInvalid()">
+                Please enter a survey name.
+              </div>
+              <input id="surveyName" type="text" [(ngModel)]="surveyName" (blur)="handleFieldBlur($event)" [class.required-invalid]="isSurveyNameInvalid()" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -34,7 +37,7 @@
             <div class="field">
               <label for="endDate">Set end date <span>(optional)</span></label>
               <div class="inputWithIcon">
-                <input id="endDate" type="date" [(ngModel)]="endDate" />
+                <input id="endDate" type="date" [(ngModel)]="endDate" (blur)="handleFieldBlur($event)" />
                 <button type="button" class="iconButton" (click)="clearEndDate()" aria-label="Clear end date">
                   <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
                 </button>
@@ -43,6 +46,9 @@
 
             <div class="field categoryField">
               <span class="requiredStar categoryRequiredStar">*</span>
+              <div class="validationDialog categoryValidationDialog" *ngIf="isCategoryInvalid()">
+                Please select a category.
+              </div>
 
               <select
                 id="category"
@@ -52,7 +58,7 @@
                 (mousedown)="isCategoryOpen = true"
                 (focus)="isCategoryOpen = true"
                 (change)="isCategoryOpen = false"
-                (blur)="isCategoryOpen = false"
+                (blur)="isCategoryOpen = false; handleFieldBlur($event)"
                 (keydown.escape)="isCategoryOpen = false"
               >
                 <option value="">Select category</option>
@@ -71,7 +77,7 @@
           <div class="field">
             <label for="description">Description text <span>(optional)</span></label>
             <div class="inputWithIcon">
-              <textarea id="description" rows="4" [(ngModel)]="description"></textarea>
+              <textarea id="description" rows="4" [(ngModel)]="description" (blur)="handleFieldBlur($event)"></textarea>
               <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -94,7 +100,12 @@
             </button>
           </div>
 
-          <input type="text" [(ngModel)]="question.text" [class.required-invalid]="isQuestionInvalid(question)" />
+          <div class="questionInputWrap">
+            <div class="validationDialog questionValidationDialog" *ngIf="getQuestionDialogMessage(question, qIndex) as questionDialogMessage">
+              {{ questionDialogMessage }}
+            </div>
+            <input type="text" [(ngModel)]="question.text" (blur)="handleFieldBlur($event)" [class.required-invalid]="isQuestionInvalid(question)" />
+          </div>
 
           <div class="answersHeader">
             <p><span class="requiredStar">*</span>Answers</p>
@@ -109,7 +120,12 @@
             *ngFor="let answer of question.answers; let aIndex = index; trackBy: trackByAnswerIndex"
           >
             <span class="answerLetter">{{ getOptionLetter(aIndex) }}.</span>
-            <input type="text" [(ngModel)]="question.answers[aIndex]" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex)" />
+            <div class="answerInputWrap">
+              <div class="validationDialog answerValidationDialog" *ngIf="aIndex === 0 && getAnswerDialogMessage(question, qIndex) as answerDialogMessage">
+                {{ answerDialogMessage }}
+              </div>
+              <input type="text" [(ngModel)]="question.answers[aIndex]" (blur)="handleFieldBlur($event)" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex)" />
+            </div>
             <button
               type="button"
               class="iconButton"
@@ -147,7 +163,6 @@
     </div>
 
     <div class="bottomBar">
-      <p class="publishError" *ngIf="publishError">{{ publishError }}</p>
       <button
         type="button"
         class="publishButton"
