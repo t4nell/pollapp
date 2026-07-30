@@ -160,7 +160,7 @@
 .validationDialog {
   position: absolute;
   left: 0;
-  bottom: calc(100% + 8px);
+  bottom: 100%;
   z-index: 20;
   background: #ff4d4f;
   color: #ffffff;
@@ -172,8 +172,18 @@
   border-radius: 8px;
 }
 
+.dateInputWrap {
+  position: relative;
+}
+
+.dateValidationDialog {
+  top: 100%;
+  bottom: auto;
+  width: 265px;
+}
+
 .categoryValidationDialog {
-  top: calc(100% - 32px);
+  top: calc(100% - 36px);
   bottom: auto;
 }
 
@@ -289,7 +299,7 @@ select::-ms-expand {
 
 .questionValidationDialog {
   left: 0;
-  bottom: calc(100% + 8px);
+  bottom: 100%;
 }
 
 .questionHeader {
@@ -354,7 +364,7 @@ select::-ms-expand {
 
 .answerValidationDialog {
   left: 0;
-  bottom: calc(100% + 8px);
+  bottom: 100%;
 }
 
 .answerLetter {
@@ -569,7 +579,7 @@ select::-ms-expand {
   }
   
   .categoryValidationDialog {
-    top: calc(100% + 4px);
+    top: 100%;
   }
 }
 

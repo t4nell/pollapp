@@ -23,6 +23,7 @@ type DraftQuestion = {
 export class NewSurveyComponent implements OnDestroy {
   isCategoryOpen = false;
   showRequiredErrors = false;
+  showEndDateValidationError = false;
   publishSuccessMessage = signal('');
   maxAnswers = 6;
   maxQuestions = 6;
@@ -122,6 +123,7 @@ export class NewSurveyComponent implements OnDestroy {
 
   clearEndDate() {
     this.endDate = '';
+    this.showEndDateValidationError = false;
   }
 
   clearDescription() {
@@ -143,6 +145,14 @@ export class NewSurveyComponent implements OnDestroy {
 
   isCategoryInvalid(): boolean {
     return this.showRequiredErrors && !this.category;
+  }
+
+  isEndDateInvalid(): boolean {
+    return this.showEndDateValidationError && this.hasPastEndDate();
+  }
+
+  onEndDateInputChange(): void {
+    this.showEndDateValidationError = false;
   }
 
   isQuestionInvalid(question: DraftQuestion): boolean {
@@ -196,7 +206,8 @@ export class NewSurveyComponent implements OnDestroy {
   private getPublishValidationError(): string | null {
     if (!this.surveyName.trim()) return 'Please enter a survey name.';
     if (!this.category) return 'Please select a category.';
-    if (this.hasPastEndDate()) return 'The end date cannot be in the past.';
+    this.showEndDateValidationError = this.hasPastEndDate();
+    if (this.showEndDateValidationError) return 'The end date cannot be in the past.';
     return this.validateQuestions();
   }
 

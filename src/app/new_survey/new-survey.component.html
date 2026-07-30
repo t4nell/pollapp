@@ -36,8 +36,11 @@
           <div class="rowFields">
             <div class="field">
               <label for="endDate">Set end date <span>(optional)</span></label>
-              <div class="inputWithIcon">
-                <input id="endDate" type="date" [(ngModel)]="endDate" (blur)="handleFieldBlur($event)" />
+              <div class="inputWithIcon dateInputWrap">
+                <div class="validationDialog dateValidationDialog" *ngIf="isEndDateInvalid()">
+                  The end date cannot be in the past.
+                </div>
+                <input id="endDate" type="date" [(ngModel)]="endDate" (ngModelChange)="onEndDateInputChange()" (blur)="handleFieldBlur($event)" [class.required-invalid]="isEndDateInvalid()" />
                 <button type="button" class="iconButton" (click)="clearEndDate()" aria-label="Clear end date">
                   <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
                 </button>
