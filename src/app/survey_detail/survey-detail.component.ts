@@ -171,19 +171,30 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   private async submitAnswers(answersToSave: AnswerInsert[]) {
     this.isSubmitting = true;
     this.submitMessage = '';
-
     try {
-      await this.saveAnswersWithTimeout(answersToSave);
-      await this.loadResults();
-      this.hasSubmitted = true;
-      this.showSubmitMessage('Survey submitted successfully.');
+      await this.performAnswerSubmission(answersToSave);
     } catch (error) {
-      console.error(error);
-      this.showSubmitMessage('Failed to submit survey. Please try again.');
+      this.handleSubmissionError(error);
     } finally {
-      this.isSubmitting = false;
-      this.cdr.detectChanges();
+      this.finishSubmission();
     }
+  }
+
+  private async performAnswerSubmission(answersToSave: AnswerInsert[]) {
+    await this.saveAnswersWithTimeout(answersToSave);
+    await this.loadResults();
+    this.hasSubmitted = true;
+    this.showSubmitMessage('Survey submitted successfully.');
+  }
+
+  private handleSubmissionError(error: unknown) {
+    console.error(error);
+    this.showSubmitMessage('Failed to submit survey. Please try again.');
+  }
+
+  private finishSubmission() {
+    this.isSubmitting = false;
+    this.cdr.detectChanges();
   }
 
   private async saveAnswersWithTimeout(answersToSave: AnswerInsert[]) {

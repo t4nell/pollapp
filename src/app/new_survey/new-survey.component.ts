@@ -67,12 +67,15 @@ export class NewSurveyComponent implements OnDestroy {
     if (!question) return;
 
     if (questionIndex === 0) {
-      question.text = '';
-      this.clearWhitespaceError(this.getQuestionFieldKey(questionId));
+      this.resetQuestionText(question, questionId);
       return;
     }
-
     this.questions.splice(questionIndex, 1);
+  }
+
+  private resetQuestionText(question: DraftQuestion, questionId: number) {
+    question.text = '';
+    this.clearWhitespaceError(this.getQuestionFieldKey(questionId));
   }
 
   trackByQuestion(_index: number, question: DraftQuestion): number {
@@ -92,12 +95,15 @@ export class NewSurveyComponent implements OnDestroy {
     if (!question) return;
 
     if (answerIndex < 2) {
-      question.answers[answerIndex] = '';
-      this.clearWhitespaceError(this.getAnswerFieldKey(question.id, answerIndex));
+      this.resetAnswerText(question, answerIndex);
       return;
     }
-
     question.answers.splice(answerIndex, 1);
+  }
+
+  private resetAnswerText(question: DraftQuestion, answerIndex: number) {
+    question.answers[answerIndex] = '';
+    this.clearWhitespaceError(this.getAnswerFieldKey(question.id, answerIndex));
   }
 
   getOptionLetter(index: number): string {
@@ -136,13 +142,16 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   handleTextFieldBlur(event: FocusEvent, fieldKey: string, value: string) {
+    this.updateWhitespaceError(fieldKey, value);
+    this.handleFieldBlur(event);
+  }
+
+  private updateWhitespaceError(fieldKey: string, value: string) {
     if (this.hasOnlyWhitespace(value)) {
       this.whitespaceFields.add(fieldKey);
-    } else {
-      this.whitespaceFields.delete(fieldKey);
+      return;
     }
-
-    this.handleFieldBlur(event);
+    this.whitespaceFields.delete(fieldKey);
   }
 
   clearWhitespaceError(fieldKey: string) {
@@ -228,12 +237,7 @@ export class NewSurveyComponent implements OnDestroy {
   async publishSurvey() {
     if (this.isPublishing) return;
     this.preparePublishAttempt();
-
-    const validationError = this.getPublishValidationError();
-    if (validationError) {
-      return;
-    }
-
+    if (this.hasPublishValidationError()) return;
     await this.executePublish();
   }
 
@@ -246,22 +250,31 @@ export class NewSurveyComponent implements OnDestroy {
     if (!this.surveyName.trim()) return 'Please enter a survey name.';
     if (!this.category) return 'Please select a category.';
     if (this.hasOnlyWhitespace(this.description)) return 'Spaces only are not allowed.';
-    this.showEndDateValidationError = this.hasPastEndDate();
     if (this.showEndDateValidationError) return 'The end date cannot be in the past.';
     return this.validateQuestions();
   }
 
+  private hasPublishValidationError(): boolean {
+    this.showEndDateValidationError = this.hasPastEndDate();
+    return this.getPublishValidationError() !== null;
+  }
+
   private async executePublish() {
     this.isPublishing = true;
-    let createdSurveyId: number | null = null;
+    try {
+      await this.performPublish();
+    } finally {
+      this.isPublishing = false;
+    }
+  }
 
+  private async performPublish() {
+    let createdSurveyId: number | null = null;
     try {
       createdSurveyId = await this.createSurveyWithQuestions();
       this.handlePublishSuccess();
     } catch (error) {
       await this.handlePublishFailure(error, createdSurveyId);
-    } finally {
-      this.isPublishing = false;
     }
   }
 
@@ -296,7 +309,15 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   private handlePublishSuccess() {
+    this.showPublishSuccessMessage();
+    this.schedulePublishFollowUp();
+  }
+
+  private showPublishSuccessMessage() {
     this.publishSuccessMessage.set('Your survey is now published');
+  }
+
+  private schedulePublishFollowUp() {
     this.scheduleSuccessMessageClear();
     this.scheduleHomeRedirect();
   }
@@ -312,6 +333,10 @@ export class NewSurveyComponent implements OnDestroy {
 
   private async handlePublishFailure(error: unknown, createdSurveyId: number | null) {
     await this.rollbackCreatedSurvey(createdSurveyId);
+    this.logPublishError(error);
+  }
+
+  private logPublishError(error: unknown) {
     console.error(error);
   }
 
