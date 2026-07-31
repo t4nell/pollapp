@@ -47,7 +47,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   selectOption(questionId: number, optionIndex: number) {
-    if (this.isSurveyExpired()) return;
+    if (this.areOptionsDisabled()) return;
 
     const question = this.findQuestionById(questionId);
     if (!question) return;
@@ -60,6 +60,10 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
   isSelected(questionId: number, optionIndex: number): boolean {
     return (this.selectedOptions[questionId] ?? []).includes(optionIndex);
+  }
+
+  areOptionsDisabled(): boolean {
+    return this.isSubmitting || this.hasSubmitted || this.isSurveyExpired();
   }
 
   private showSubmitMessage(message: string) {
@@ -96,9 +100,15 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   getResultPercent(questionId: number, optionIndex: number): number {
-    const total = this.totalAnswersByQuestion[questionId] ?? 0;
-    const count = this.resultsByQuestion[questionId]?.[optionIndex] ?? 0;
-    return this.calculatePercent(count, total);
+    const storedTotal = this.totalAnswersByQuestion[questionId] ?? 0;
+    const storedCount = this.resultsByQuestion[questionId]?.[optionIndex] ?? 0;
+    const previewOptions = this.hasSubmitted ? [] : this.selectedOptions[questionId] ?? [];
+    const previewCount = previewOptions.includes(optionIndex) ? 1 : 0;
+
+    return this.calculatePercent(
+      storedCount + previewCount,
+      storedTotal + previewOptions.length
+    );
   }
 
   getOptionLetter(optionIndex: number): string {
@@ -106,7 +116,11 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   }
 
   hasAnyResults(): boolean {
-    return Object.values(this.totalAnswersByQuestion).some((total) => total > 0);
+    const hasStoredResults = Object.values(this.totalAnswersByQuestion).some((total) => total > 0);
+    const hasPreviewSelection = !this.hasSubmitted
+      && Object.values(this.selectedOptions).some((options) => options.length > 0);
+
+    return hasStoredResults || hasPreviewSelection;
   }
 
   isSurveyExpired(): boolean {

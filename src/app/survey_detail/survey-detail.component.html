@@ -29,11 +29,12 @@
             class="option"
             *ngFor="let option of question.options; let i = index"
             [class.selected]="isSelected(question.id, i)"
-            [class.is-expired]="isSurveyExpired()">
+            [class.is-expired]="isSurveyExpired()"
+            [class.is-disabled]="areOptionsDisabled()">
             <input
               type="checkbox"
               [checked]="isSelected(question.id, i)"
-              [disabled]="isSurveyExpired()"
+              [disabled]="areOptionsDisabled()"
               (change)="selectOption(question.id, i)">
             <span class="optionText">{{ option }}</span>
           </label>

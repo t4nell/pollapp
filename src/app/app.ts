@@ -1,5 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, HostBinding, signal, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { Supabase } from './supabase';
 
@@ -12,4 +12,10 @@ import { Supabase } from './supabase';
 export class App {
   protected readonly title = signal('pollapp');
   dbService = inject(Supabase);
+  router = inject(Router);
+
+  @HostBinding('class.survey-detail-page')
+  get isSurveyDetail(): boolean {
+    return this.router.url.startsWith('/survey/');
+  }
 }
