@@ -28,6 +28,7 @@ export class NewSurveyComponent implements OnDestroy {
   maxAnswers = 6;
   maxQuestions = 6;
   private nextQuestionId = 1;
+  private whitespaceFields = new Set<string>();
   private successMessageTimer: ReturnType<typeof setTimeout> | null = null;
   private redirectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -67,6 +68,7 @@ export class NewSurveyComponent implements OnDestroy {
 
     if (questionIndex === 0) {
       question.text = '';
+      this.clearWhitespaceError(this.getQuestionFieldKey(questionId));
       return;
     }
 
@@ -91,6 +93,7 @@ export class NewSurveyComponent implements OnDestroy {
 
     if (answerIndex < 2) {
       question.answers[answerIndex] = '';
+      this.clearWhitespaceError(this.getAnswerFieldKey(question.id, answerIndex));
       return;
     }
 
@@ -119,6 +122,7 @@ export class NewSurveyComponent implements OnDestroy {
 
   clearSurveyName() {
     this.surveyName = '';
+    this.clearWhitespaceError('surveyName');
   }
 
   clearEndDate() {
@@ -128,6 +132,25 @@ export class NewSurveyComponent implements OnDestroy {
 
   clearDescription() {
     this.description = '';
+    this.clearWhitespaceError('description');
+  }
+
+  handleTextFieldBlur(event: FocusEvent, fieldKey: string, value: string) {
+    if (this.hasOnlyWhitespace(value)) {
+      this.whitespaceFields.add(fieldKey);
+    } else {
+      this.whitespaceFields.delete(fieldKey);
+    }
+
+    this.handleFieldBlur(event);
+  }
+
+  clearWhitespaceError(fieldKey: string) {
+    this.whitespaceFields.delete(fieldKey);
+  }
+
+  hasWhitespaceError(fieldKey: string): boolean {
+    return this.whitespaceFields.has(fieldKey);
   }
 
   handleFieldBlur(event: FocusEvent) {
@@ -160,6 +183,7 @@ export class NewSurveyComponent implements OnDestroy {
   }
 
   getQuestionDialogMessage(question: DraftQuestion, questionIndex: number): string | null {
+    if (this.hasWhitespaceError(this.getQuestionFieldKey(question.id))) return 'Spaces only are not allowed.';
     if (!this.showRequiredErrors) return null;
     if (!question.text.trim()) return `Please enter text for question ${questionIndex + 1}.`;
 
@@ -175,6 +199,20 @@ export class NewSurveyComponent implements OnDestroy {
     return null;
   }
 
+  getQuestionFieldKey(questionId: number): string {
+    return `question-${questionId}`;
+  }
+
+  getAnswerFieldKey(questionId: number, answerIndex: number): string {
+    return `answer-${questionId}-${answerIndex}`;
+  }
+
+  hasRequiredAnswerWhitespaceError(question: DraftQuestion): boolean {
+    return [0, 1].some((answerIndex) =>
+      this.hasWhitespaceError(this.getAnswerFieldKey(question.id, answerIndex))
+    );
+  }
+
   isAnswerInvalid(answer: string, answerIndex: number): boolean {
     return this.showRequiredErrors && answerIndex < 2 && !answer.trim();
   }
@@ -182,6 +220,7 @@ export class NewSurveyComponent implements OnDestroy {
   get canPublish(): boolean {
     if (!this.surveyName.trim()) return false;
     if (!this.category) return false;
+    if (this.hasOnlyWhitespace(this.description)) return false;
 
     return this.questions.every((question) => this.isQuestionPublishable(question));
   }
@@ -206,6 +245,7 @@ export class NewSurveyComponent implements OnDestroy {
   private getPublishValidationError(): string | null {
     if (!this.surveyName.trim()) return 'Please enter a survey name.';
     if (!this.category) return 'Please select a category.';
+    if (this.hasOnlyWhitespace(this.description)) return 'Spaces only are not allowed.';
     this.showEndDateValidationError = this.hasPastEndDate();
     if (this.showEndDateValidationError) return 'The end date cannot be in the past.';
     return this.validateQuestions();
@@ -306,13 +346,21 @@ export class NewSurveyComponent implements OnDestroy {
   private isQuestionPublishable(question: DraftQuestion): boolean {
     const hasQuestionText = question.text.trim().length > 0;
     const firstTwoAnswersFilled = question.answers.slice(0, 2).every((answer) => answer.trim().length > 0);
-    return hasQuestionText && firstTwoAnswersFilled;
+    const hasWhitespaceAnswer = question.answers.some((answer) => this.hasOnlyWhitespace(answer));
+    return hasQuestionText && firstTwoAnswersFilled && !hasWhitespaceAnswer;
+  }
+
+  private hasOnlyWhitespace(value: string): boolean {
+    return value.length > 0 && value.trim().length === 0;
   }
 
   private getQuestionValidationError(question: DraftQuestion, questionNumber: number): string | null {
     if (!question.text.trim()) return `Please enter text for question ${questionNumber}.`;
     if (!question.answers.slice(0, 2).every((answer) => answer.trim().length > 0)) {
       return `Question ${questionNumber} needs at least 2 answers.`;
+    }
+    if (question.answers.some((answer) => this.hasOnlyWhitespace(answer))) {
+      return `Question ${questionNumber} contains an answer with spaces only.`;
     }
     return null;
   }

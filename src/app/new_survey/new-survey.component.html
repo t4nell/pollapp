@@ -23,10 +23,15 @@
               <button type="button" class="backButton" (click)="goToHome()">X</button>
             </div>
             <div class="inputWithIcon surveyNameInputWrap">
-              <div class="validationDialog nameValidationDialog" *ngIf="isSurveyNameInvalid()">
-                Please enter a survey name.
+              <div class="validationDialog nameValidationDialog" *ngIf="hasWhitespaceError('surveyName'); else requiredNameMessage">
+                Spaces only are not allowed.
               </div>
-              <input id="surveyName" type="text" [(ngModel)]="surveyName" (blur)="handleFieldBlur($event)" [class.required-invalid]="isSurveyNameInvalid()" />
+              <ng-template #requiredNameMessage>
+                <div class="validationDialog nameValidationDialog" *ngIf="isSurveyNameInvalid()">
+                Please enter a survey name.
+                </div>
+              </ng-template>
+              <input id="surveyName" type="text" [(ngModel)]="surveyName" (ngModelChange)="clearWhitespaceError('surveyName')" (blur)="handleTextFieldBlur($event, 'surveyName', surveyName)" [class.required-invalid]="isSurveyNameInvalid() || hasWhitespaceError('surveyName')" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -79,8 +84,11 @@
         <div class="rightMeta">
           <div class="field">
             <label for="description">Description text <span>(optional)</span></label>
-            <div class="inputWithIcon">
-              <textarea id="description" rows="4" [(ngModel)]="description" (blur)="handleFieldBlur($event)"></textarea>
+            <div class="inputWithIcon descriptionInputWrap">
+              <div class="validationDialog descriptionValidationDialog" *ngIf="hasWhitespaceError('description')">
+                Spaces only are not allowed.
+              </div>
+              <textarea id="description" rows="4" [(ngModel)]="description" (ngModelChange)="clearWhitespaceError('description')" (blur)="handleTextFieldBlur($event, 'description', description)" [class.required-invalid]="hasWhitespaceError('description')"></textarea>
               <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -107,7 +115,7 @@
             <div class="validationDialog questionValidationDialog" *ngIf="getQuestionDialogMessage(question, qIndex) as questionDialogMessage">
               {{ questionDialogMessage }}
             </div>
-            <input type="text" [(ngModel)]="question.text" (blur)="handleFieldBlur($event)" [class.required-invalid]="isQuestionInvalid(question)" />
+            <input type="text" [(ngModel)]="question.text" (ngModelChange)="clearWhitespaceError(getQuestionFieldKey(question.id))" (blur)="handleTextFieldBlur($event, getQuestionFieldKey(question.id), question.text)" [class.required-invalid]="isQuestionInvalid(question) || hasWhitespaceError(getQuestionFieldKey(question.id))" />
           </div>
 
           <div class="answersHeader">
@@ -120,14 +128,18 @@
 
           <div
             class="answerRow"
+            [class.firstAnswerRow]="aIndex === 0"
             *ngFor="let answer of question.answers; let aIndex = index; trackBy: trackByAnswerIndex"
           >
             <span class="answerLetter">{{ getOptionLetter(aIndex) }}.</span>
             <div class="answerInputWrap">
-              <div class="validationDialog answerValidationDialog" *ngIf="aIndex === 0 && getAnswerDialogMessage(question, qIndex) as answerDialogMessage">
+              <div class="validationDialog answerValidationDialog" *ngIf="hasWhitespaceError(getAnswerFieldKey(question.id, aIndex))">
+                Spaces only are not allowed.
+              </div>
+              <div class="validationDialog answerValidationDialog" *ngIf="aIndex === 0 && !hasRequiredAnswerWhitespaceError(question) && getAnswerDialogMessage(question, qIndex) as answerDialogMessage">
                 {{ answerDialogMessage }}
               </div>
-              <input type="text" [(ngModel)]="question.answers[aIndex]" (blur)="handleFieldBlur($event)" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex)" />
+              <input type="text" [(ngModel)]="question.answers[aIndex]" (ngModelChange)="clearWhitespaceError(getAnswerFieldKey(question.id, aIndex))" (blur)="handleTextFieldBlur($event, getAnswerFieldKey(question.id, aIndex), question.answers[aIndex])" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex) || hasWhitespaceError(getAnswerFieldKey(question.id, aIndex))" />
             </div>
             <button
               type="button"

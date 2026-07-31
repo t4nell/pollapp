@@ -172,8 +172,20 @@
   border-radius: 8px;
 }
 
+.nameValidationDialog {
+  bottom: 0;
+}
+
 .dateInputWrap {
   position: relative;
+}
+
+.descriptionInputWrap {
+  position: relative;
+}
+
+.descriptionValidationDialog {
+  bottom: 100%;
 }
 
 .dateValidationDialog {
@@ -299,7 +311,7 @@ select::-ms-expand {
 
 .questionValidationDialog {
   left: 0;
-  bottom: 100%;
+  bottom: 0;
 }
 
 .questionHeader {
@@ -356,6 +368,10 @@ select::-ms-expand {
   grid-template-columns: auto 1fr auto;
   gap: 8px;
   align-items: center;
+}
+
+.firstAnswerRow {
+  margin-top: 16px;
 }
 
 .answerInputWrap {
@@ -560,7 +576,7 @@ select::-ms-expand {
 @media (max-width: 1250px) {
   .metaGrid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 30px;
   }
 
   .rowFields {
@@ -579,7 +595,7 @@ select::-ms-expand {
   }
   
   .categoryValidationDialog {
-    top: 100%;
+    top: 10%;
   }
 }
 
