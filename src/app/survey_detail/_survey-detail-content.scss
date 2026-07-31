@@ -1,0 +1,383 @@
+.detailPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 60px;
+  align-items: flex-end;
+  padding-bottom: 40px;
+
+  .surveyForm {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #8E70991A;
+    border-top-right-radius: 80px;
+    padding: 40px;
+    max-width: 700px;
+
+    .surveyMeta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .statusBar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      
+        
+      }
+
+      .statusBadge {
+          background: #FFB770;
+          padding: 2px 12px;
+          border-radius: 20px;
+          font-family: 'Mulish', sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          width: fit-content;
+          text-transform: capitalize;
+        }
+
+        .backButton {
+          width: 30px;
+          height: 30px;
+          background: #FFCFA1;
+          border: none;
+          border-radius: 10px;
+          color: black;
+          font-family: 'Mulish', sans-serif;
+          font-size: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0;
+          margin-right: 32px;
+          display: none;
+        };
+
+
+      
+
+      .metaRow {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .endDate {
+          padding-right: 16px;
+        }
+
+        .endDate, .category {
+          font-family: 'Mulish', sans-serif;
+          font-size: 16px;
+          color: #35273A;
+        };
+      };
+    };
+
+    h1 {
+      font-family: 'NerkoOne', sans-serif;
+      color: #FFB770;
+      font-size: 56px;
+      line-height: 1;
+      font-weight: 400;
+    };
+
+    .description {
+      font-family: 'Mulish', sans-serif;
+      font-size: 16px;
+      color: #35273A;
+    };
+
+    .questionsGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+
+      .questionCard {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+
+        .multiHint {
+          font-family: 'Mulish', sans-serif;
+          text-align: center;
+          font-size: 14px;
+          font-weight: 400;
+          color: #6f6f6f;
+        };
+          
+        .questionText {
+          font-family: 'Mulish', sans-serif;
+          font-weight: 700;
+          font-size: 16px;
+          color: #35273A;
+        };
+
+        .optionsList {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Mulish', sans-serif;
+            font-size: 16px;
+            color: #35273A;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+
+            &:hover {
+              background: #FFCFA1;
+            }
+
+            &.is-disabled {
+              cursor: not-allowed;
+              opacity: 0.65;
+
+              &:hover {
+                background: transparent;
+              }
+
+              input[type="checkbox"] {
+                cursor: not-allowed;
+              }
+            }
+
+            &.is-expired {
+              cursor: not-allowed;
+              opacity: 0.7;
+              color: #8f8795;
+
+              &:hover {
+                background: transparent;
+              }
+
+              .optionText {
+                color: #8f8795;
+              }
+
+              input[type="checkbox"] {
+                background: #ece7ee;
+                border-color: #b6a9bf;
+                cursor: not-allowed;
+              }
+            }
+
+            .optionText {
+              line-height: 1.2;
+            }
+
+            input[type="checkbox"] {
+              appearance: none;
+              -webkit-appearance: none;
+              width: 14px;
+              height: 14px;
+              border: 1.5px solid #6f6f6f;
+              border-radius: 2px;
+              background: #FFFFFF;
+              position: relative;
+              cursor: pointer;
+              flex-shrink: 0;
+            }
+
+            &.selected input[type="checkbox"] {
+              background: #FFB770;
+              border-color: #FFB770;
+            }
+
+            &.selected input[type="checkbox"]::after {
+              content: '';
+              position: absolute;
+              left: 4px;
+              top: 1px;
+              width: 3px;
+              height: 7px;
+              border: solid #35273A;
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+            }
+          };
+        };
+      };
+    };
+
+    .completeButton {
+      align-self: flex-end;
+      background: #FFB770;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-family: 'Mulish', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      .labelMobile,
+      .checkIcon {
+        display: none;
+      }
+
+      .checkIcon {
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover:not(:disabled) {
+        background: #ffcfa1;
+      };
+
+      &:disabled {
+        background: #c7c7c7;
+        color: #6f6f6f;
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
+
+      &:disabled:hover {
+        background: #c7c7c7;
+      }
+    };
+
+    .submitOverlay {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+      max-width: 360px;
+      background: #35273A;
+      color: #FFFFFF;
+      border-left: 5px solid #FFB770;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'NerkoOne', sans-serif;
+      font-size: 20px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+      animation: slideInFromRight 300ms ease-out, fadeOutToRight 400ms ease-in 3000ms forwards;
+
+    }
+
+    @keyframes slideInFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(110%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeOutToRight {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(24px);
+      }
+    }
+  };
+
+  .resultsPanel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+    min-height: 700px;
+
+    &.has-results {
+      justify-content: space-between;
+    }
+
+    h2 {
+      font-family: 'NerkoOne', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: #35273A;
+
+      .live {
+        color: #FFB770;
+      };
+    };
+
+    .resultQuestion {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    };
+
+    .resultQuestionTitle {
+      font-family: 'Mulish', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #35273A;
+      line-height: 1.3;
+    };
+
+    .resultRow {
+      display: grid;
+      grid-template-columns: 22px 1fr 36px;
+      gap: 8px;
+      align-items: center;
+    };
+
+    .resultLabel {
+      font-family: 'Mulish', sans-serif;
+      font-size: 12px;
+      color: #35273A;
+      line-height: 1.2;
+    };
+
+    .resultTrack {
+      width: 100%;
+      height: 12px;
+      background: #E8E3ED;
+      border-top-right-radius: 999px;
+      border-bottom-right-radius: 999px;
+      overflow: hidden;
+    };
+
+    .resultBar {
+      height: 100%;
+      background: #FFB770;
+      border-top-right-radius: 999px;
+      border-bottom-right-radius: 999px;
+      transition: width 220ms ease;
+    };
+
+    .resultPercent {
+      font-family: 'Mulish', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #B1762E;
+      text-align: right;
+    };
+
+    .noResults {
+      font-family: 'Mulish', sans-serif;
+      font-size: 18px;
+      color: #35273A;
+    };
+
+    .noAnswers {
+      text-align: center;
+      font-family: 'NerkoOne', sans-serif;
+      margin-top: 100px;
+      font-size: 24px;
+      color: #35273A;
+    };
+  };  
+};

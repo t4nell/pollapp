@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  padding: 24px 20px 40px;
+}
+
+.createSurveyPage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.createSurveyCard {
+  width: min(1180px, 100%);
+  background: #35273a;
+  border-top-right-radius: 90px;
+  border-top-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding: 42px 42px 28px;
+  box-sizing: border-box;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.backButton {
+  width: 30px;
+  height: 30px;
+  background: #FFCFA1;
+  border: none;
+  border-radius: 10px;
+  color: black;
+  font-family: 'Mulish', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  display: none;
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  h1 {
+    font-family: 'NerkoOne', sans-serif;
+    font-size: 56px;
+    line-height: 42px;
+    font-weight: 400;
+    color: #EE9236;
+  }
+}
+
+.labelWithBackButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 16px;
+}
+
+.draftBadge {
+  width: fit-content;
+  background: #ffcfa1;
+  color: #35273a;
+  padding: 4px 12px;
+  border-top-right-radius: 20px;
+  font-family: 'Mulish', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cancelButton {
+  border: none;
+  margin-top: 53px;
+  background: #7a5a63;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Mulish', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease;
+
+  &:hover {
+    background: #ffcfa1;
+    transform: translateY(-1px);
+  }
+}
+
+.xIcon {
+  opacity: 0.9;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.innerPanel {
+  margin-top: 26px;
+  background: #4a3854;
+  border-top-right-radius: 70px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding: 28px 24px 24px;
+  box-sizing: border-box;
+}
