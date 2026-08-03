@@ -157,6 +157,10 @@ select {
     padding-left: 8px;
     transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
 
+    option {
+      color: #2f2f2f;
+    }
+
     &:hover {
         background-color: #D9D9D91F;
         background-image: url('../../assets/icons/arrow_drop_down_hover.png');
