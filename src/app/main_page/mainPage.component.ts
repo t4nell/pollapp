@@ -2,7 +2,7 @@ import { Component, OnDestroy, effect } from '@angular/core';
 import { StartComponent } from './components/landing_page/startComponent.component';
 import { EndingSoonSurveys } from './components/ending_soon_surveys/endingSoonSurveys.component';
 import { AllSurveys } from './components/all_surveys/allSurveys.component';
-import { NewSurveyComponent } from '../new_survey/new-survey.component';
+import { NewSurveyComponent } from '../new_survey/newSurvey.component';
 import { UiStateService } from '../shared/services/ui-state.service';
 import { CommonModule } from '@angular/common';
 
@@ -10,8 +10,8 @@ import { CommonModule } from '@angular/common';
   selector: 'main-page',
   standalone: true,
   imports: [CommonModule, StartComponent, EndingSoonSurveys, AllSurveys, NewSurveyComponent],
-  templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.scss',
+  templateUrl: './mainPage.component.html',
+  styleUrl: './mainPage.component.scss',
 })
 export class MainPageComponent implements OnDestroy {
   constructor(public uiState: UiStateService) {

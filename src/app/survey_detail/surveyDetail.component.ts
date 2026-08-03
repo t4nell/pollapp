@@ -11,8 +11,8 @@ type StoredAnswer = { question_id: number; option_index: number };
   selector: 'survey-detail',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './survey-detail.component.html',
-  styleUrl: './survey-detail.component.scss'
+  templateUrl: './surveyDetail.component.html',
+  styleUrl: './surveyDetail.component.scss'
 })
 export class SurveyDetailComponent implements OnInit, OnDestroy {
   survey: Survey | null = null;

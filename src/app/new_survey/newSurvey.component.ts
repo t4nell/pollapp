@@ -16,8 +16,8 @@ type DraftQuestion = {
   selector: 'new-survey',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './new-survey.component.html',
-  styleUrl: './new-survey.component.scss',
+  templateUrl: './newSurvey.component.html',
+  styleUrl: './newSurvey.component.scss',
 })
 
 export class NewSurveyComponent implements OnDestroy {
