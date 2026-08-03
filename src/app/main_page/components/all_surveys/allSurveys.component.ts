@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Survey } from '../../../shared/interfaces/survey.interface';
 import { SurveyService } from '../../../shared/services/survey.service';
@@ -14,13 +14,12 @@ import { Router } from '@angular/router';
 
 
 export class AllSurveys implements OnInit {
-    surveys: Survey[] = [];
     isSelectOpen = false;
     activeFilter: 'active' | 'past' | null = 'active';
     selectedCategory = '';
 
     get filteredSurveys(): Survey[] {
-        return this.surveys.filter((survey) => this.matchesSurveyFilters(survey));
+      return this.surveyService.surveys().filter((survey) => this.matchesSurveyFilters(survey));
     }
 
     private matchesSurveyFilters(survey: Survey): boolean {
@@ -67,12 +66,11 @@ export class AllSurveys implements OnInit {
       this.router.navigate(['/survey', id]);
     }
 
-  constructor( private surveyService: SurveyService, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private surveyService: SurveyService, private router: Router) {}
 
   async ngOnInit() {
     try {
-      this.surveys = await this.surveyService.getAllSurveys();
-      this.cdr.detectChanges();
+      await this.surveyService.loadAllSurveys();
     } catch (error) {
       console.error(error);
     }

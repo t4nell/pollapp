@@ -31,7 +31,7 @@
                 Please enter a survey name.
                 </div>
               </ng-template>
-              <input id="surveyName" type="text" [(ngModel)]="surveyName" (ngModelChange)="clearWhitespaceError('surveyName')" (blur)="handleTextFieldBlur($event, 'surveyName', surveyName)" [class.required-invalid]="isSurveyNameInvalid() || hasWhitespaceError('surveyName')" />
+              <input id="surveyName" type="text" [(ngModel)]="surveyName" (ngModelChange)="clearWhitespaceError('surveyName')" (blur)="handleTextFieldBlur('surveyName', surveyName)" [class.required-invalid]="isSurveyNameInvalid() || hasWhitespaceError('surveyName')" />
               <button type="button" class="iconButton" (click)="clearSurveyName()" aria-label="Clear survey name">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -45,7 +45,7 @@
                 <div class="validationDialog dateValidationDialog" *ngIf="isEndDateInvalid()">
                   The end date cannot be in the past.
                 </div>
-                <input id="endDate" type="date" [(ngModel)]="endDate" (ngModelChange)="onEndDateInputChange()" (blur)="handleFieldBlur($event)" [class.required-invalid]="isEndDateInvalid()" />
+                <input id="endDate" type="date" [(ngModel)]="endDate" (ngModelChange)="onEndDateInputChange()" (blur)="onEndDateBlur()" [class.required-invalid]="isEndDateInvalid()" />
                 <button type="button" class="iconButton" (click)="clearEndDate()" aria-label="Clear end date">
                   <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
                 </button>
@@ -66,7 +66,7 @@
                 (mousedown)="isCategoryOpen = true"
                 (focus)="isCategoryOpen = true"
                 (change)="isCategoryOpen = false"
-                (blur)="isCategoryOpen = false; handleFieldBlur($event)"
+                (blur)="isCategoryOpen = false; markFieldTouched('category')"
                 (keydown.escape)="isCategoryOpen = false"
               >
                 <option value="">Select category</option>
@@ -88,7 +88,7 @@
               <div class="validationDialog descriptionValidationDialog" *ngIf="hasWhitespaceError('description')">
                 Spaces only are not allowed.
               </div>
-              <textarea id="description" rows="4" [(ngModel)]="description" (ngModelChange)="clearWhitespaceError('description')" (blur)="handleTextFieldBlur($event, 'description', description)" [class.required-invalid]="hasWhitespaceError('description')"></textarea>
+              <textarea id="description" rows="4" [(ngModel)]="description" (ngModelChange)="clearWhitespaceError('description')" (blur)="handleTextFieldBlur('description', description)" [class.required-invalid]="hasWhitespaceError('description')"></textarea>
               <button type="button" class="iconButton" (click)="clearDescription()" aria-label="Clear description">
                 <img src="assets/icons/property1_default.png" alt="" class="trashIcon" />
               </button>
@@ -115,7 +115,7 @@
             <div class="validationDialog questionValidationDialog" *ngIf="getQuestionDialogMessage(question, qIndex) as questionDialogMessage">
               {{ questionDialogMessage }}
             </div>
-            <input type="text" [(ngModel)]="question.text" (ngModelChange)="clearWhitespaceError(getQuestionFieldKey(question.id))" (blur)="handleTextFieldBlur($event, getQuestionFieldKey(question.id), question.text)" [class.required-invalid]="isQuestionInvalid(question) || hasWhitespaceError(getQuestionFieldKey(question.id))" />
+            <input type="text" [(ngModel)]="question.text" (ngModelChange)="clearWhitespaceError(getQuestionFieldKey(question.id))" (blur)="handleTextFieldBlur(getQuestionFieldKey(question.id), question.text)" [class.required-invalid]="isQuestionInvalid(question) || hasWhitespaceError(getQuestionFieldKey(question.id))" />
           </div>
 
           <div class="answersHeader">
@@ -136,10 +136,10 @@
               <div class="validationDialog answerValidationDialog" *ngIf="hasWhitespaceError(getAnswerFieldKey(question.id, aIndex))">
                 Spaces only are not allowed.
               </div>
-              <div class="validationDialog answerValidationDialog" *ngIf="aIndex === 0 && !hasRequiredAnswerWhitespaceError(question) && getAnswerDialogMessage(question, qIndex) as answerDialogMessage">
+              <div class="validationDialog answerValidationDialog" *ngIf="!hasWhitespaceError(getAnswerFieldKey(question.id, aIndex)) && getAnswerDialogMessage(question, aIndex) as answerDialogMessage">
                 {{ answerDialogMessage }}
               </div>
-              <input type="text" [(ngModel)]="question.answers[aIndex]" (ngModelChange)="clearWhitespaceError(getAnswerFieldKey(question.id, aIndex))" (blur)="handleTextFieldBlur($event, getAnswerFieldKey(question.id, aIndex), question.answers[aIndex])" [class.required-invalid]="isAnswerInvalid(question.answers[aIndex], aIndex) || hasWhitespaceError(getAnswerFieldKey(question.id, aIndex))" />
+              <input type="text" [(ngModel)]="question.answers[aIndex]" (ngModelChange)="clearWhitespaceError(getAnswerFieldKey(question.id, aIndex))" (blur)="handleTextFieldBlur(getAnswerFieldKey(question.id, aIndex), question.answers[aIndex])" [class.required-invalid]="isAnswerInvalid(question, question.answers[aIndex], aIndex) || hasWhitespaceError(getAnswerFieldKey(question.id, aIndex))" />
             </div>
             <button
               type="button"

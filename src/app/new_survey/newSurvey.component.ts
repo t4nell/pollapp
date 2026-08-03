@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SurveyService } from '../shared/services/survey.service';
 import { UiStateService } from '../shared/services/ui-state.service';
+import { Survey } from '../shared/interfaces/survey.interface';
 
 type DraftQuestion = {
   id: number;
@@ -22,12 +23,12 @@ type DraftQuestion = {
 
 export class NewSurveyComponent implements OnDestroy {
   isCategoryOpen = false;
-  showRequiredErrors = false;
   showEndDateValidationError = false;
   publishSuccessMessage = signal('');
   maxAnswers = 6;
   maxQuestions = 6;
   private nextQuestionId = 1;
+  private touchedFields = new Set<string>();
   private whitespaceFields = new Set<string>();
   private successMessageTimer: ReturnType<typeof setTimeout> | null = null;
   private redirectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -141,9 +142,17 @@ export class NewSurveyComponent implements OnDestroy {
     this.clearWhitespaceError('description');
   }
 
-  handleTextFieldBlur(event: FocusEvent, fieldKey: string, value: string) {
+  handleTextFieldBlur(fieldKey: string, value: string) {
     this.updateWhitespaceError(fieldKey, value);
-    this.handleFieldBlur(event);
+    this.markFieldTouched(fieldKey);
+  }
+
+  markFieldTouched(fieldKey: string): void {
+    this.touchedFields.add(fieldKey);
+  }
+
+  isFieldTouched(fieldKey: string): boolean {
+    return this.touchedFields.has(fieldKey);
   }
 
   private updateWhitespaceError(fieldKey: string, value: string) {
@@ -162,21 +171,12 @@ export class NewSurveyComponent implements OnDestroy {
     return this.whitespaceFields.has(fieldKey);
   }
 
-  handleFieldBlur(event: FocusEvent) {
-    const currentField = event.currentTarget as HTMLElement | null;
-    const nextFocusedElement = event.relatedTarget as Node | null;
-    const overlay = currentField?.closest('.createSurveyCard');
-
-    if (overlay && nextFocusedElement && overlay.contains(nextFocusedElement)) return;
-    this.showRequiredErrors = true;
-  }
-
   isSurveyNameInvalid(): boolean {
-    return this.showRequiredErrors && !this.surveyName.trim();
+    return this.isFieldTouched('surveyName') && !this.surveyName.trim();
   }
 
   isCategoryInvalid(): boolean {
-    return this.showRequiredErrors && !this.category;
+    return this.isFieldTouched('category') && !this.category;
   }
 
   isEndDateInvalid(): boolean {
@@ -187,23 +187,30 @@ export class NewSurveyComponent implements OnDestroy {
     this.showEndDateValidationError = false;
   }
 
+  onEndDateBlur(): void {
+    this.showEndDateValidationError = this.hasPastEndDate();
+  }
+
   isQuestionInvalid(question: DraftQuestion): boolean {
-    return this.showRequiredErrors && !question.text.trim();
+    const fieldKey = this.getQuestionFieldKey(question.id);
+    return this.isFieldTouched(fieldKey) && !question.text.trim();
   }
 
   getQuestionDialogMessage(question: DraftQuestion, questionIndex: number): string | null {
-    if (this.hasWhitespaceError(this.getQuestionFieldKey(question.id))) return 'Spaces only are not allowed.';
-    if (!this.showRequiredErrors) return null;
+    const fieldKey = this.getQuestionFieldKey(question.id);
+    if (this.hasWhitespaceError(fieldKey)) return 'Spaces only are not allowed.';
+    if (!this.isFieldTouched(fieldKey)) return null;
     if (!question.text.trim()) return `Please enter text for question ${questionIndex + 1}.`;
 
     return null;
   }
 
-  getAnswerDialogMessage(question: DraftQuestion, questionIndex: number): string | null {
-    if (!this.showRequiredErrors) return null;
-
-    const firstTwoAnswersFilled = question.answers.slice(0, 2).every((answer) => answer.trim().length > 0);
-    if (!firstTwoAnswersFilled) return `Please fill answers A and B for question ${questionIndex + 1}.`;
+  getAnswerDialogMessage(question: DraftQuestion, answerIndex: number): string | null {
+    const fieldKey = this.getAnswerFieldKey(question.id, answerIndex);
+    if (!this.isFieldTouched(fieldKey) || answerIndex >= 2) return null;
+    if (!question.answers[answerIndex].trim()) {
+      return `Please fill answer ${this.getOptionLetter(answerIndex)}.`;
+    }
 
     return null;
   }
@@ -216,14 +223,9 @@ export class NewSurveyComponent implements OnDestroy {
     return `answer-${questionId}-${answerIndex}`;
   }
 
-  hasRequiredAnswerWhitespaceError(question: DraftQuestion): boolean {
-    return [0, 1].some((answerIndex) =>
-      this.hasWhitespaceError(this.getAnswerFieldKey(question.id, answerIndex))
-    );
-  }
-
-  isAnswerInvalid(answer: string, answerIndex: number): boolean {
-    return this.showRequiredErrors && answerIndex < 2 && !answer.trim();
+  isAnswerInvalid(question: DraftQuestion, answer: string, answerIndex: number): boolean {
+    const fieldKey = this.getAnswerFieldKey(question.id, answerIndex);
+    return this.isFieldTouched(fieldKey) && answerIndex < 2 && !answer.trim();
   }
 
   get canPublish(): boolean {
@@ -271,18 +273,20 @@ export class NewSurveyComponent implements OnDestroy {
   private async performPublish() {
     let createdSurveyId: number | null = null;
     try {
-      createdSurveyId = await this.createSurveyWithQuestions();
+      const survey = await this.createSurveyWithQuestions();
+      createdSurveyId = survey.id;
+      this.surveyService.addSurvey(survey);
       this.handlePublishSuccess();
     } catch (error) {
       await this.handlePublishFailure(error, createdSurveyId);
     }
   }
 
-  private async createSurveyWithQuestions(): Promise<number> {
+  private async createSurveyWithQuestions(): Promise<Survey> {
     const survey = await this.surveyService.createSurvey(this.buildSurveyPayload());
     const questions = this.buildQuestionsPayload(survey.id);
     await this.surveyService.createQuestions(questions);
-    return survey.id;
+    return survey;
   }
 
   private buildSurveyPayload() {

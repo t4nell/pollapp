@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Supabase } from '../../supabase';
 import { Survey, Question } from '../interfaces/survey.interface';
 
@@ -21,7 +21,18 @@ type QuestionCreatePayload = {
   providedIn: 'root',
 })
 export class SurveyService {
+  private readonly surveysState = signal<Survey[]>([]);
+  readonly surveys = this.surveysState.asReadonly();
+
   constructor(private supabase: Supabase) {}
+
+  async loadAllSurveys(): Promise<void> {
+    this.surveysState.set(await this.getAllSurveys());
+  }
+
+  addSurvey(survey: Survey): void {
+    this.surveysState.update((surveys) => [survey, ...surveys]);
+  }
 
   async getAllSurveys(): Promise<Survey[]> {
     const { data, error } = await this.supabase.supabase
